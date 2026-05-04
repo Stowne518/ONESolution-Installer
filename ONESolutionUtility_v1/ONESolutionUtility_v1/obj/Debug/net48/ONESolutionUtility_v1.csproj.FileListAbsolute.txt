@@ -1,0 +1,15 @@
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.csproj.AssemblyReference.cache
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\MainWindow.baml
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\MainWindow.g.cs
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\App.g.cs
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1_MarkupCompile.cache
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.g.resources
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.AssemblyInfoInputs.cache
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.AssemblyInfo.cs
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.csproj.CoreCompileInputs.cache
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\bin\Debug\net48\ONESolutionUtility_v1.exe.config
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\bin\Debug\net48\ONESolutionUtility_v1.exe
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\bin\Debug\net48\ONESolutionUtility_v1.pdb
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.exe
+C:\Users\trevor.latimer\source\repos\ONESolutionUtility_v1\ONESolutionUtility_v1\obj\Debug\net48\ONESolutionUtility_v1.pdb
