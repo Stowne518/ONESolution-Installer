@@ -299,6 +299,8 @@ namespace ONESolutionUtility_v1
         {
             if (code == 1638)
                 Log($"{name} is already installed.", LogLevel.Success);
+            else if (code == 1603)
+                Log($"Newer version of {name} is already installed.", LogLevel.Success);
             else if (code == 0)
                 Log($"{name} installed successfully.", LogLevel.Success);
             else
