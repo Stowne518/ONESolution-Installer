@@ -146,7 +146,7 @@ namespace ONESolutionUtility_v1
                 }
                 if (cfg.InstallOsmct)
                 {
-                    AssertPath(cfg.MupdatePath,      "mupdate Path");
+                    AssertPath(cfg.MupdatePath,      "Mupdate Path");
                     AssertPath(cfg.OsmctInstallPath, "OSMCT Installer Path");
                 }
                 if (cfg.InstallCad)

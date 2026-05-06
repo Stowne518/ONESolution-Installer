@@ -121,7 +121,7 @@
                             <Label Grid.Row="2" Grid.Column="0">Moblan Path (MFR)</Label>
                             <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMoblanPath"/>
 
-                            <Label Grid.Row="3" Grid.Column="0">mupdate Path (OSMCT)</Label>
+              <Label Grid.Row="3" Grid.Column="0">Mupdate Path (OSMCT)</Label>
                             <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtMupdatePath"/>
 
                             <Label Grid.Row="4" Grid.Column="0">OSMCT Installer Path</Label>
