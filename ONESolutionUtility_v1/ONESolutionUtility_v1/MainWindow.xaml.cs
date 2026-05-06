@@ -231,13 +231,14 @@ namespace ONESolutionUtility_v1
 
             if (cfg.IsCloud)
             {
-                InstallExe(cfg.CadCloudPath, "/S /v/qn", "CAD Cloud Workstation Installer");
+                InstallExe(Path.Combine(cfg.CadCloudPath, "CADWorkstation_Installer.exe"), "/S /v/qn", "CAD Cloud Workstation Installer");
             }
             else
             {
                 CreateShortcut(cfg.ShortcutPath, cfg.CadShortcutName,
                     Path.Combine(cfg.CadPath, "onesolutioncad.exe"), cfg.CadPath);
                 EnsureFolder(cfg.FoxtmpPath);
+                EnsureFolder(cfg.SuperionPath);
             }
         }
 
