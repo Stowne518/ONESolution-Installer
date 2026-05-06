@@ -86,7 +86,33 @@
                         </WrapPanel>
                     </GroupBox>
                 </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
+                    <GroupBox Header="FileSync" Margin="4,4,0,4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="170"/>
+                                <ColumnDefinition Width="190"/>
+                                <ColumnDefinition Width="70"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,0" Grid.RowSpan="1">Server FQDN</Label>
+                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="FileSyncFQDN" Margin="0,0,10,0"/>
+                            <Button Grid.Row="0" Grid.Column="2" x:Name="GenFilePaths" Content="Fill Paths"
+                                Width="70" Height="24"
+                                Background="#1E3A5F" Foreground="White"
+                                FontWeight="Bold" Click="GenFilePaths_Click"/>
+                        </Grid>
+                    </GroupBox>
+                    
+                </Grid>
                 <!-- Row 2: Network paths (left) + Local/CAD paths (right) -->
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -97,7 +123,8 @@
                     <GroupBox Header="Network Paths">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="170"/>
+                                <ColumnDefinition Width="63"/>
+                                <ColumnDefinition Width="107"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -110,28 +137,28 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0">Shortcut Destination</Label>
-                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtShortcutPath"
-                                     Text="C:\Users\Public\Desktop"/>
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Shortcut Destination</Label>
+                            <TextBox Grid.Row="0" Grid.Column="2" x:Name="TxtShortcutPath"
+                                     Text="C:\Users\Public\Desktop" Margin="0,2,0,4"/>
 
-                            <Label Grid.Row="1" Grid.Column="0">RMS / JMS App Path</Label>
-                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtRmsJmsPath"/>
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">RMS / JMS App Path</Label>
+                            <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtRmsJmsPath" Margin="0,2,0,4"/>
 
-                            <Label Grid.Row="2" Grid.Column="0">Moblan Path (MFR)</Label>
-                            <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMoblanPath"/>
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Moblan Path (MFR)</Label>
+                            <TextBox Grid.Row="2" Grid.Column="2" x:Name="TxtMoblanPath" Margin="0,2,0,4"/>
 
-              <Label Grid.Row="3" Grid.Column="0">Mupdate Path (OSMCT)</Label>
-                            <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtMupdatePath"/>
+                            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Mupdate Path (OSMCT)</Label>
+                            <TextBox Grid.Row="3" Grid.Column="2" x:Name="TxtMupdatePath" Margin="0,2,0,4"/>
 
-                            <Label Grid.Row="4" Grid.Column="0">OSMCT Installer Path</Label>
-                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtOsmctInstallPath"/>
+                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">OSMCT Installer Path</Label>
+                            <TextBox Grid.Row="4" Grid.Column="2" x:Name="TxtOsmctInstallPath" Margin="0,2,0,4"/>
 
-                            <Label Grid.Row="5" Grid.Column="0">Shared Path</Label>
-                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="TxtSharedPath"
-                                     ToolTip="Folder containing: ONESolution RMS and JMS Components.msi, msodbcsql64_17.msi, vc_redist.x64.exe"/>
+                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Shared Path</Label>
+                            <TextBox Grid.Row="5" Grid.Column="2" x:Name="TxtSharedPath"
+                                     ToolTip="Folder containing: ONESolution RMS and JMS Components.msi, msodbcsql64_17.msi, vc_redist.x64.exe" Margin="0,2,0,4"/>
 
-                            <Label Grid.Row="6" Grid.Column="0">Report Viewer Path</Label>
-                            <TextBox Grid.Row="6" Grid.Column="1" x:Name="TxtReportViewerPath"/>
+                            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">Report Viewer Path</Label>
+                            <TextBox Grid.Row="6" Grid.Column="2" x:Name="TxtReportViewerPath" Margin="0,2,0,4"/>
                         </Grid>
                     </GroupBox>
 
@@ -236,3 +263,5 @@
         </ScrollViewer>
     </DockPanel>
 </Window>
+
+    
