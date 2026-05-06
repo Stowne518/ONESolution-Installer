@@ -408,5 +408,12 @@ namespace ONESolutionUtility_v1
                 RichTxtLog.ScrollToEnd();
             });
         }
+
+        // ── Utility Helpers ───────────────────────────────────────────────────────────────
+
+        private void FillPaths()
+        {
+
+        }
     }
 }
