@@ -5,6 +5,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 
@@ -41,6 +42,11 @@ namespace ONESolutionUtility_v1
             });
             thread.IsBackground = true;
             thread.Start();
+        }
+
+        private void GenFilePaths_Click(object sender, RoutedEventArgs e)
+        {
+            FillPaths();
         }
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
@@ -413,7 +419,13 @@ namespace ONESolutionUtility_v1
 
         private void FillPaths()
         {
-
+            TxtRmsJmsPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\onesolutionrms";
+            TxtMoblanPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\moblan\\mfr";
+            TxtMupdatePath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\mupdate";
+            TxtOsmctInstallPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\mobmast\\onesolutionmct\\setup";
+            TxtSharedPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\shared";
+            TxtReportViewerPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\cad\\onesolutioncad\\setup";
+            TxtCadCloudPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\cad\\std install";
         }
     }
 }
