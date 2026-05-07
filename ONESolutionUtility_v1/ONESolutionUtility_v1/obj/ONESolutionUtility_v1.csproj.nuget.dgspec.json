@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\samuel.towne\\Source\\Repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj": {}
+    "C:\\Users\\samuel.towne\\source\\repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\samuel.towne\\Source\\Repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj": {
+    "C:\\Users\\samuel.towne\\source\\repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\samuel.towne\\Source\\Repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj",
+        "projectUniqueName": "C:\\Users\\samuel.towne\\source\\repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj",
         "projectName": "ONESolutionUtility_v1",
-        "projectPath": "C:\\Users\\samuel.towne\\Source\\Repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj",
+        "projectPath": "C:\\Users\\samuel.towne\\source\\repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\ONESolutionUtility_v1.csproj",
         "packagesPath": "C:\\Users\\samuel.towne\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\samuel.towne\\Source\\Repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\obj\\",
+        "outputPath": "C:\\Users\\samuel.towne\\source\\repos\\ONESolution-Installer\\ONESolutionUtility_v1\\ONESolutionUtility_v1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
