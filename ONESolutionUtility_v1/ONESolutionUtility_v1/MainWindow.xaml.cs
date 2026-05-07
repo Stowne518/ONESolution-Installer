@@ -232,7 +232,7 @@ namespace ONESolutionUtility_v1
 
         private void SetupCad(InstallConfig cfg)
         {
-            InstallExe(Path.Combine(cfg.ReportViewerPath, "reportviewer.exe"), "/S /v/qn",
+            InstallExe(Path.Combine(cfg.ReportViewerPath, "reportviewer.exe"), "/q",
                 "Report Viewer");
 
             if (cfg.IsCloud)
