@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace ONESolutionUtility_v1
 {
@@ -59,7 +60,59 @@ namespace ONESolutionUtility_v1
             RichTxtLog.Document.Blocks.Clear();
         }
 
-        private InstallConfig BuildConfig()
+        private void ChkCloudCustomer_Checked(object sender, RoutedEventArgs e)
+        {
+            if (FileServerGroup != null)
+            {
+                FileServerGroup.Header = "FileSync";
+				AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 600);
+
+                RmsLabel.Visibility = Visibility.Collapsed;
+                CadLabel.Visibility = Visibility.Collapsed;
+                TxtRMSFolder.Text = "";
+                TxtRMSFolder.Visibility = Visibility.Collapsed;
+                TxtCADFolder.Text = "";
+                TxtCADFolder.Visibility = Visibility.Collapsed;
+            }
+        }
+		
+		private void ChkCloudCustomer_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (FileServerGroup != null)
+            {
+                FileServerGroup.Header = "FileShare";
+				AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 120);
+				RmsLabel.Visibility = Visibility.Visible;
+                CadLabel.Visibility = Visibility.Visible;
+                TxtRMSFolder.Visibility = Visibility.Visible;
+                TxtCADFolder.Visibility = Visibility.Visible;
+            }
+        }
+
+		private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+			    throw new NotImplementedException();
+            } 
+            catch
+            {
+                Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
+            }
+		}
+
+		private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
+        {
+			try
+			{
+				throw new NotImplementedException();
+			}
+			catch
+			{
+				Log("Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
+			}
+		}
+		private InstallConfig BuildConfig()
         {
             return Dispatcher.Invoke(() => new InstallConfig
             {
@@ -78,7 +131,7 @@ namespace ONESolutionUtility_v1
                 SharedPath         = TxtSharedPath.Text.TrimEnd('\\', '/'),
                 ReportViewerPath   = TxtReportViewerPath.Text.TrimEnd('\\', '/'),
                 CadPath            = TxtCadPath.Text.TrimEnd('\\', '/'),
-                CadCloudPath       = TxtCadCloudPath.Text.TrimEnd('\\', '/'),
+                CadCloudPath       = TxtCadPath.Text.TrimEnd('\\', '/'),
 
                 SuperionPath   = TxtSuperionPath.Text.TrimEnd('\\', '/'),
                 MobfilesPath   = TxtMobfilesPath.Text.TrimEnd('\\', '/'),
@@ -95,6 +148,7 @@ namespace ONESolutionUtility_v1
                 OsmctShortcutName     = TxtOsmctName.Text,
                 OsmctCloudShortcutName = TxtOsmctCloudName.Text,
             });
+
         }
 
         // ── Entry point ──────────────────────────────────────────────────────────
@@ -158,10 +212,7 @@ namespace ONESolutionUtility_v1
                 if (cfg.InstallCad)
                 {
                     AssertPath(cfg.ReportViewerPath, "Report Viewer Path");
-                    if (cfg.IsCloud)
-                        AssertPath(cfg.CadCloudPath, "CAD Cloud Installer Path");
-                    else
-                        AssertPath(cfg.CadPath, "CAD Path (on-prem)");
+                    AssertPath(cfg.CadPath, "CAD Path");
                 }
 
                 return true;
@@ -237,12 +288,12 @@ namespace ONESolutionUtility_v1
 
             if (cfg.IsCloud)
             {
-                InstallExe(Path.Combine(cfg.CadCloudPath, "CADWorkstation_Installer.exe"), "/S /v/qn", "CAD Cloud Workstation Installer");
+                InstallExe(Path.Combine(cfg.CadPath, "CADWorkstation_Installer.exe"), "/S /v/qn", "CAD Cloud Workstation Installer");
             }
             else
             {
                 CreateShortcut(cfg.ShortcutPath, cfg.CadShortcutName,
-                    Path.Combine(cfg.CadPath, "onesolutioncad.exe"), cfg.CadPath);
+                Path.Combine(cfg.CadPath, "onesolutioncad.exe"), cfg.CadPath);
                 EnsureFolder(cfg.FoxtmpPath);
                 EnsureFolder(cfg.SuperionPath);
             }
@@ -419,13 +470,57 @@ namespace ONESolutionUtility_v1
 
         private void FillPaths()
         {
-            TxtRmsJmsPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\onesolutionrms";
-            TxtMoblanPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\moblan\\mfr";
-            TxtMupdatePath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\mupdate";
-            TxtOsmctInstallPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\mobmast\\onesolutionmct\\setup";
-            TxtSharedPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\rms\\shared";
-            TxtReportViewerPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\cad\\onesolutioncad\\setup";
-            TxtCadCloudPath.Text = $"\\\\{FileSyncFQDN.Text}\\FileSync\\cad\\std install";
+            if (ChkCloudCustomer.IsChecked == true)
+            {
+                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\onesolutionrms";
+                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\moblan\\mfr";
+                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mupdate";
+                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mobmast\\onesolutionmct\\setup";
+                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\shared";
+                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\onesolutioncad\\setup";
+                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\std install";
+            }
+            else
+            {
+                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\onesolutionrms";
+                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\moblan\\mfr";
+                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mupdate";
+                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mobmast\\onesolutionmct\\setup";
+                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\shared";
+                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\onesolutioncad\\setup";
+                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\std install";
+            }
         }
-    }
+
+		public void AnimateColumnWidth(ColumnDefinition column, double toWidth, double durationSeconds = 0.3)
+		{
+			double fromWidth = column.Width.Value;
+			double delta = toWidth - fromWidth;
+			int frames = (int)(120 * durationSeconds); // 120 FPS
+			int currentFrame = 0;
+			var easing = new CubicEase { EasingMode = EasingMode.EaseInOut };
+
+			var timer = new System.Windows.Threading.DispatcherTimer
+			{
+				Interval = TimeSpan.FromSeconds(durationSeconds / frames)
+			};
+
+			timer.Tick += (s, e) =>
+			{
+				currentFrame++;
+				double progress = (double)currentFrame / frames;
+				double easedProgress = easing.Ease(progress);
+				double newWidth = fromWidth + delta * easedProgress;
+				column.Width = new GridLength(newWidth, GridUnitType.Pixel);
+
+				if (currentFrame >= frames)
+				{
+					column.Width = new GridLength(toWidth, GridUnitType.Pixel);
+					timer.Stop();
+				}
+			};
+
+			timer.Start();
+		}
+	}
 }
