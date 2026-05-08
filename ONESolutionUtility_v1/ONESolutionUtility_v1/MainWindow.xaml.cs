@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
@@ -94,7 +95,9 @@ namespace ONESolutionUtility_v1
         {
             try
             {
-			    throw new NotImplementedException();
+			    //throw new NotImplementedException();
+
+                CopyDir("C:\\temp\\SQL NEW Backup and Restore Scripts\\", "C:\\newdir\\");
             } 
             catch
             {
@@ -490,6 +493,58 @@ namespace ONESolutionUtility_v1
                 TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\shared";
                 TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\onesolutioncad\\setup";
                 TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\std install";
+            }
+        }
+
+        private void CopyDir(string source, string destination)
+        {
+            try
+            {
+			    // Create directory if it doesn't exist
+			    if (Directory.Exists(destination))
+                    Log($"{destination} already exists");
+                else
+                    Directory.CreateDirectory(destination);
+
+				string[] directory_files = Directory.GetFiles(source);
+                foreach (string file in directory_files)
+                {
+                    File.Copy(file, destination);
+                }
+
+                if(Directory.Equals(destination, source))
+                {
+                    Log($"Successfully copied {source} to {destination}!", LogLevel.Success);
+                }
+                else
+                {
+                    Log($"Directory: {destination} copy was unsuccessful. {destination} is not equal to {source}. Compare folders manually.", LogLevel.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Error during file copy operations: {ex.Message}", LogLevel.Error);
+            }
+        }
+
+        private void RenameDir(string source, string destination)
+        {
+            try
+            {
+                if (!Directory.Exists(destination))
+                {
+                    Directory.CreateDirectory(destination);
+                }
+                else
+                {
+                    Directory.Move(source, destination);
+                }
+
+				Log($"{source} successfully renamed to {destination}.", LogLevel.Success);
+			}
+            catch (Exception)
+            {
+                Log($"{source} unsuccessfully renamed to {destination}.", LogLevel.Error);
             }
         }
 
