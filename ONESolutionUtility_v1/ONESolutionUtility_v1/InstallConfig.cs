@@ -18,7 +18,6 @@ namespace ONESolutionUtility_v1
         public string SharedPath       { get; set; }
         public string ReportViewerPath { get; set; }
         public string CadPath          { get; set; }
-        public string CadCloudPath     { get; set; }
 
         // Local folders
         public string SuperionPath { get; set; }
