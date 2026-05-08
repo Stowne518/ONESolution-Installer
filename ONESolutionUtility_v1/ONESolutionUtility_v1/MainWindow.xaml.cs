@@ -1,4 +1,8 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,7 +93,19 @@ namespace ONESolutionUtility_v1
             TxtCADFolder.Visibility = Visibility.Visible;
         }
 
-        // ── Config + path helpers ─────────────────────────────────────────────────
+		private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+			    //throw new NotImplementedException();
+
+                CopyDir("C:\\temp\\SQL NEW Backup and Restore Scripts\\", "C:\\newdir\\");
+            } 
+            catch
+            {
+                Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
+            }
+		}
 
         private InstallConfig BuildConfig()
         {
@@ -188,11 +204,87 @@ namespace ONESolutionUtility_v1
 
         private void AnimateColumnWidth(ColumnDefinition column, double toWidth, double durationSeconds = 0.3)
         {
-            double fromWidth    = column.Width.Value;
-            double delta        = toWidth - fromWidth;
-            int    frames       = (int)(120 * durationSeconds);
-            int    currentFrame = 0;
-            var    easing       = new CubicEase { EasingMode = EasingMode.EaseInOut };
+            if (ChkCloudCustomer.IsChecked == true)
+            {
+                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\onesolutionrms";
+                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\moblan\\mfr";
+                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mupdate";
+                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mobmast\\onesolutionmct\\setup";
+                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\shared";
+                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\onesolutioncad\\setup";
+                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\std install";
+            }
+            else
+            {
+                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\onesolutionrms";
+                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\moblan\\mfr";
+                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mupdate";
+                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mobmast\\onesolutionmct\\setup";
+                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\shared";
+                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\onesolutioncad\\setup";
+                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\std install";
+            }
+        }
+
+        private void CopyDir(string source, string destination)
+        {
+            try
+            {
+			    // Create directory if it doesn't exist
+			    if (Directory.Exists(destination))
+                    Log($"{destination} already exists");
+                else
+                    Directory.CreateDirectory(destination);
+
+				string[] directory_files = Directory.GetFiles(source);
+                foreach (string file in directory_files)
+                {
+                    File.Copy(file, destination);
+                }
+
+                if(Directory.Equals(destination, source))
+                {
+                    Log($"Successfully copied {source} to {destination}!", LogLevel.Success);
+                }
+                else
+                {
+                    Log($"Directory: {destination} copy was unsuccessful. {destination} is not equal to {source}. Compare folders manually.", LogLevel.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Error during file copy operations: {ex.Message}", LogLevel.Error);
+            }
+        }
+
+        private void RenameDir(string source, string destination)
+        {
+            try
+            {
+                if (!Directory.Exists(destination))
+                {
+                    Directory.CreateDirectory(destination);
+                }
+                else
+                {
+                    Directory.Move(source, destination);
+                }
+
+				Log($"{source} successfully renamed to {destination}.", LogLevel.Success);
+			}
+            catch (Exception)
+            {
+                Log($"{source} unsuccessfully renamed to {destination}.", LogLevel.Error);
+            }
+        }
+
+		public void AnimateColumnWidth(ColumnDefinition column, double toWidth, double durationSeconds = 0.3)
+		{
+			double fromWidth = column.Width.Value;
+			double delta = toWidth - fromWidth;
+			int frames = (int)(120 * durationSeconds); // 120 FPS
+			int currentFrame = 0;
+			var easing = new CubicEase { EasingMode = EasingMode.EaseInOut };
 
             var timer = new System.Windows.Threading.DispatcherTimer
             {
