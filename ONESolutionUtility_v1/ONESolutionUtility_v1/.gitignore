@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ONESolutionUtility_v1/.vs
+/.vs/ONESolution-Installer/v17
+/.vs
+/ONESolutionUtility_v1/ONESolutionUtility_v1/obj/
+/ONESolutionUtility_v1/ONESolutionUtility_v1/bin/
