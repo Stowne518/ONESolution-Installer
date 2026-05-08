@@ -17,6 +17,7 @@ namespace ONESolutionUtility_v1
         public MainWindow()
         {
             InitializeComponent();
+            MaxHeight = SystemParameters.WorkArea.Height;
         }
 
         private void BtnInstall_Click(object sender, RoutedEventArgs e)
