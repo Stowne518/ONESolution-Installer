@@ -1,8 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Security.AccessControl;
-using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,11 +10,16 @@ namespace ONESolutionUtility_v1
 {
     public partial class MainWindow : Window
     {
+        private readonly WorkstationInstaller _installer;
+
         public MainWindow()
         {
             InitializeComponent();
-            MaxHeight = SystemParameters.WorkArea.Height;
+            MaxHeight  = SystemParameters.WorkArea.Height;
+            _installer = new WorkstationInstaller(Log);
         }
+
+        // ── Button handlers ───────────────────────────────────────────────────────
 
         private void BtnInstall_Click(object sender, RoutedEventArgs e)
         {
@@ -31,7 +32,7 @@ namespace ONESolutionUtility_v1
             {
                 try
                 {
-                    RunInstall(config);
+                    _installer.RunInstall(config);
                 }
                 catch (Exception ex)
                 {
@@ -46,405 +47,121 @@ namespace ONESolutionUtility_v1
             thread.Start();
         }
 
-        private void GenFilePaths_Click(object sender, RoutedEventArgs e)
+        private void GenFilePaths_Click(object sender, RoutedEventArgs e) => FillPaths();
+
+        private void BtnClear_Click(object sender, RoutedEventArgs e) => ClearLog();
+
+        private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
-            FillPaths();
+            Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
         }
 
-        private void BtnClear_Click(object sender, RoutedEventArgs e)
+        private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
-            ClearLog();
+            Log("Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
         }
 
-        private void ClearLog()
-        {
-            RichTxtLog.Document.Blocks.Clear();
-        }
+        // ── Cloud customer toggle ─────────────────────────────────────────────────
 
         private void ChkCloudCustomer_Checked(object sender, RoutedEventArgs e)
         {
-            if (FileServerGroup != null)
-            {
-                FileServerGroup.Header = "FileSync";
-				AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 600);
+            if (FileServerGroup == null) return;
 
-                RmsLabel.Visibility = Visibility.Collapsed;
-                CadLabel.Visibility = Visibility.Collapsed;
-                TxtRMSFolder.Text = "";
-                TxtRMSFolder.Visibility = Visibility.Collapsed;
-                TxtCADFolder.Text = "";
-                TxtCADFolder.Visibility = Visibility.Collapsed;
-            }
-        }
-		
-		private void ChkCloudCustomer_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (FileServerGroup != null)
-            {
-                FileServerGroup.Header = "FileShare";
-				AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 120);
-				RmsLabel.Visibility = Visibility.Visible;
-                CadLabel.Visibility = Visibility.Visible;
-                TxtRMSFolder.Visibility = Visibility.Visible;
-                TxtCADFolder.Visibility = Visibility.Visible;
-            }
+            FileServerGroup.Header = "FileSync";
+            AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 600);
+            RmsLabel.Visibility    = Visibility.Collapsed;
+            CadLabel.Visibility    = Visibility.Collapsed;
+            TxtRMSFolder.Text      = "";
+            TxtRMSFolder.Visibility = Visibility.Collapsed;
+            TxtCADFolder.Text      = "";
+            TxtCADFolder.Visibility = Visibility.Collapsed;
         }
 
-		private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
+        private void ChkCloudCustomer_Unchecked(object sender, RoutedEventArgs e)
         {
-            try
-            {
-			    throw new NotImplementedException();
-            } 
-            catch
-            {
-                Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
-            }
-		}
+            if (FileServerGroup == null) return;
 
-		private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
+            FileServerGroup.Header = "FileShare";
+            AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 120);
+            RmsLabel.Visibility     = Visibility.Visible;
+            CadLabel.Visibility     = Visibility.Visible;
+            TxtRMSFolder.Visibility = Visibility.Visible;
+            TxtCADFolder.Visibility = Visibility.Visible;
+        }
+
+        // ── Config + path helpers ─────────────────────────────────────────────────
+
+        private InstallConfig BuildConfig()
         {
-			try
-			{
-				throw new NotImplementedException();
-			}
-			catch
-			{
-				Log("Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
-			}
-		}
-		private InstallConfig BuildConfig()
-        {
-            return Dispatcher.Invoke(() => new InstallConfig
+            return new InstallConfig
             {
-                IsCloud        = ChkCloudCustomer.IsChecked == true,
-                InstallRms     = ChkRms.IsChecked == true,
-                InstallJms     = ChkJms.IsChecked == true,
-                InstallMfr     = ChkMfr.IsChecked == true,
-                InstallCad     = ChkCad.IsChecked == true,
-                InstallOsmct   = ChkOsmct.IsChecked == true,
+                IsCloud      = ChkCloudCustomer.IsChecked == true,
+                InstallRms   = ChkRms.IsChecked == true,
+                InstallJms   = ChkJms.IsChecked == true,
+                InstallMfr   = ChkMfr.IsChecked == true,
+                InstallCad   = ChkCad.IsChecked == true,
+                InstallOsmct = ChkOsmct.IsChecked == true,
 
-                ShortcutPath       = TxtShortcutPath.Text.TrimEnd('\\', '/'),
-                RmsJmsPath         = TxtRmsJmsPath.Text.TrimEnd('\\', '/'),
-                MoblanPath         = TxtMoblanPath.Text.TrimEnd('\\', '/'),
-                MupdatePath        = TxtMupdatePath.Text.TrimEnd('\\', '/'),
-                OsmctInstallPath   = TxtOsmctInstallPath.Text.TrimEnd('\\', '/'),
-                SharedPath         = TxtSharedPath.Text.TrimEnd('\\', '/'),
-                ReportViewerPath   = TxtReportViewerPath.Text.TrimEnd('\\', '/'),
-                CadPath            = TxtCadPath.Text.TrimEnd('\\', '/'),
-                CadCloudPath       = TxtCadPath.Text.TrimEnd('\\', '/'),
+                ShortcutPath     = TxtShortcutPath.Text.TrimEnd('\\', '/'),
+                RmsJmsPath       = TxtRmsJmsPath.Text.TrimEnd('\\', '/'),
+                MoblanPath       = TxtMoblanPath.Text.TrimEnd('\\', '/'),
+                MupdatePath      = TxtMupdatePath.Text.TrimEnd('\\', '/'),
+                OsmctInstallPath = TxtOsmctInstallPath.Text.TrimEnd('\\', '/'),
+                SharedPath       = TxtSharedPath.Text.TrimEnd('\\', '/'),
+                ReportViewerPath = TxtReportViewerPath.Text.TrimEnd('\\', '/'),
+                CadPath          = TxtCadPath.Text.TrimEnd('\\', '/'),
 
-                SuperionPath   = TxtSuperionPath.Text.TrimEnd('\\', '/'),
-                MobfilesPath   = TxtMobfilesPath.Text.TrimEnd('\\', '/'),
-                FoxtmpPath     = TxtFoxtmpPath.Text.TrimEnd('\\', '/'),
-                OssimobPath    = TxtOssimobPath.Text.TrimEnd('\\', '/'),
+                SuperionPath = TxtSuperionPath.Text.TrimEnd('\\', '/'),
+                MobfilesPath = TxtMobfilesPath.Text.TrimEnd('\\', '/'),
+                FoxtmpPath   = TxtFoxtmpPath.Text.TrimEnd('\\', '/'),
+                OssimobPath  = TxtOssimobPath.Text.TrimEnd('\\', '/'),
 
-                RmsShortcutName       = TxtRmsName.Text,
-                RmsCloudShortcutName  = TxtRmsCloudName.Text,
-                JmsShortcutName       = TxtJmsName.Text,
-                JmsCloudShortcutName  = TxtJmsCloudName.Text,
-                MfrShortcutName       = TxtMfrName.Text,
-                MfrCloudShortcutName  = TxtMfrCloudName.Text,
-                CadShortcutName       = TxtCadName.Text,
-                OsmctShortcutName     = TxtOsmctName.Text,
+                RmsShortcutName        = TxtRmsName.Text,
+                RmsCloudShortcutName   = TxtRmsCloudName.Text,
+                JmsShortcutName        = TxtJmsName.Text,
+                JmsCloudShortcutName   = TxtJmsCloudName.Text,
+                MfrShortcutName        = TxtMfrName.Text,
+                MfrCloudShortcutName   = TxtMfrCloudName.Text,
+                CadShortcutName        = TxtCadName.Text,
+                OsmctShortcutName      = TxtOsmctName.Text,
                 OsmctCloudShortcutName = TxtOsmctCloudName.Text,
-            });
-
-        }
-
-        // ── Entry point ──────────────────────────────────────────────────────────
-
-        private void RunInstall(InstallConfig cfg)
-        {
-            if (!ValidatePaths(cfg))
-                return;
-
-            if (cfg.InstallRms)
-                SetupRms(cfg);
-            else
-                Log("Install RMS set to false. Skipping.", LogLevel.Warning);
-
-            if (cfg.InstallJms)
-                SetupJms(cfg);
-            else
-                Log("Install JMS set to false. Skipping.", LogLevel.Warning);
-
-            if (cfg.InstallMfr)
-                SetupMfr(cfg);
-            else
-                Log("Install MFR set to false. Skipping.", LogLevel.Warning);
-
-            if (cfg.InstallCad)
-                SetupCad(cfg);
-            else
-                Log("Install CAD set to false. Skipping.", LogLevel.Warning);
-
-            if (cfg.InstallOsmct)
-                SetupOsmct(cfg);
-            else
-                Log("Install OSMCT set to false. Skipping.", LogLevel.Warning);
-
-            Log("Done.", LogLevel.Success);
-        }
-
-        // ── Validation ───────────────────────────────────────────────────────────
-
-        private bool ValidatePaths(InstallConfig cfg)
-        {
-            try
-            {
-                AssertPath(cfg.ShortcutPath, "Shortcut Destination Path");
-
-                if (cfg.InstallRms || cfg.InstallJms)
-                {
-                    AssertPath(cfg.RmsJmsPath, "RMS/JMS App Path");
-                    AssertPath(cfg.SharedPath,  "Shared Path (ODBC/VCRedist/Components)");
-                }
-                if (cfg.InstallMfr)
-                {
-                    AssertPath(cfg.MoblanPath, "Moblan Path");
-                    AssertPath(cfg.SharedPath,  "Shared Path (ODBC/VCRedist)");
-                }
-                if (cfg.InstallOsmct)
-                {
-                    AssertPath(cfg.MupdatePath,      "Mupdate Path");
-                    AssertPath(cfg.OsmctInstallPath, "OSMCT Installer Path");
-                }
-                if (cfg.InstallCad)
-                {
-                    AssertPath(cfg.ReportViewerPath, "Report Viewer Path");
-                    AssertPath(cfg.CadPath, "CAD Path");
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Log("Configuration error: " + ex.Message, LogLevel.Error);
-                Log("Please fix the path and try again.", LogLevel.Error);
-                return false;
-            }
-        }
-
-        private void AssertPath(string path, string label)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-                throw new Exception($"Required path '{label}' is empty.");
-            if (!Directory.Exists(path))
-                throw new Exception($"Required path '{label}' does not exist: {path}");
-        }
-
-        // ── Per-app setup ─────────────────────────────────────────────────────────
-
-        private void SetupRms(InstallConfig cfg)
-        {
-            string name = cfg.IsCloud ? cfg.RmsCloudShortcutName : cfg.RmsShortcutName;
-            CreateShortcut(cfg.ShortcutPath, name,
-                Path.Combine(cfg.RmsJmsPath, "onesolutionrms.exe"), cfg.RmsJmsPath);
-
-            InstallMsi(Path.Combine(cfg.SharedPath, "ONESolution RMS and JMS Components.msi"),
-                "RMS and JMS Components");
-            InstallExe(Path.Combine(cfg.SharedPath, "vc_redist.x64.exe"), "/S /v/qn",
-                "VC Redistributable");
-            InstallOdbc(cfg.SharedPath);
-
-            EnsureFolder(cfg.FoxtmpPath);
-            EnsureFolder(cfg.SuperionPath);
-        }
-
-        private void SetupJms(InstallConfig cfg)
-        {
-            string name = cfg.IsCloud ? cfg.JmsCloudShortcutName : cfg.JmsShortcutName;
-            CreateShortcut(cfg.ShortcutPath, name,
-                Path.Combine(cfg.RmsJmsPath, "onesolutionjms.exe"), cfg.RmsJmsPath);
-
-            InstallMsi(Path.Combine(cfg.SharedPath, "ONESolution RMS and JMS Components.msi"),
-                "RMS and JMS Components");
-            InstallExe(Path.Combine(cfg.SharedPath, "vc_redist.x64.exe"), "/S /v/qn",
-                "VC Redistributable");
-            InstallOdbc(cfg.SharedPath);
-
-            EnsureFolder(cfg.FoxtmpPath);
-            EnsureFolder(cfg.SuperionPath);
-        }
-
-        private void SetupMfr(InstallConfig cfg)
-        {
-            string name = cfg.IsCloud ? cfg.MfrCloudShortcutName : cfg.MfrShortcutName;
-            CreateShortcut(cfg.ShortcutPath, name,
-                Path.Combine(cfg.MoblanPath, "mfr.exe"), cfg.MoblanPath);
-
-            InstallExe(Path.Combine(cfg.SharedPath, "vc_redist.x64.exe"), "/S /v/qn",
-                "VC Redistributable");
-            InstallOdbc(cfg.SharedPath);
-
-            EnsureFolder(cfg.FoxtmpPath);
-            EnsureFolder(cfg.SuperionPath);
-        }
-
-        private void SetupCad(InstallConfig cfg)
-        {
-            InstallExe(Path.Combine(cfg.ReportViewerPath, "reportviewer.exe"), "/q",
-                "Report Viewer");
-
-            if (cfg.IsCloud)
-            {
-                InstallExe(Path.Combine(cfg.CadPath, "CADWorkstation_Installer.exe"), "/S /v/qn", "CAD Cloud Workstation Installer");
-            }
-            else
-            {
-                CreateShortcut(cfg.ShortcutPath, cfg.CadShortcutName,
-                Path.Combine(cfg.CadPath, "onesolutioncad.exe"), cfg.CadPath);
-                EnsureFolder(cfg.FoxtmpPath);
-                EnsureFolder(cfg.SuperionPath);
-            }
-        }
-
-        private void SetupOsmct(InstallConfig cfg)
-        {
-            Log("Installing OSMCT...", LogLevel.Info);
-            int code = RunProcess(
-                Path.Combine(cfg.OsmctInstallPath, "onesolutionmctsetup.exe"), "/S /v/qn");
-            if (code == 0)
-                Log("OSMCT installer completed successfully.", LogLevel.Success);
-            else
-                Log($"OSMCT installer exited with code {code}.", LogLevel.Warning);
-
-            string name = cfg.IsCloud ? cfg.OsmctCloudShortcutName : cfg.OsmctShortcutName;
-            CreateShortcut(cfg.ShortcutPath, name,
-                @"C:\ossimob\osupdater.exe", @"C:\ossimob");
-
-            EnsureFolder(cfg.FoxtmpPath);
-            EnsureFolder(cfg.SuperionPath);
-            EnsureFolder(cfg.OssimobPath);
-            EnsureFolder(cfg.MobfilesPath);
-
-            Log("Launching mupdate...", LogLevel.Info);
-            try
-            {
-                Process.Start(Path.Combine(cfg.MupdatePath, "mupdate.exe"));
-            }
-            catch (Exception ex)
-            {
-                Log("Failed to launch mupdate: " + ex.Message, LogLevel.Error);
-            }
-        }
-
-        // ── Installer helpers ─────────────────────────────────────────────────────
-
-        private void InstallMsi(string msiPath, string displayName)
-        {
-            Log($"Installing {displayName}...", LogLevel.Info);
-            int code = RunProcess("msiexec.exe", $"/i \"{msiPath}\" /qn /norestart");
-            ReportExitCode(code, displayName);
-        }
-
-        private void InstallOdbc(string sharedPath)
-        {
-            Log("Installing MS ODBC SQL Driver 17...", LogLevel.Info);
-            int code = RunProcess("msiexec.exe",
-                $"/i \"{Path.Combine(sharedPath, "msodbcsql64_17.msi")}\" /qn /norestart IACCEPTMSODBCSQLLICENSETERMS=YES");
-            ReportExitCode(code, "ODBC Driver 17");
-        }
-
-        private void InstallExe(string exePath, string args, string displayName)
-        {
-            Log($"Installing {displayName}...", LogLevel.Info);
-            int code = RunProcess(exePath, args);
-            ReportExitCode(code, displayName);
-        }
-
-        private void ReportExitCode(int code, string name)
-        {
-            if (code == 1638)
-                Log($"{name} is already installed.", LogLevel.Success);
-            else if (code == 1603)
-                Log($"Newer version of {name} is already installed.", LogLevel.Success);
-            else if (code == 0)
-                Log($"{name} installed successfully.", LogLevel.Success);
-            else
-                Log($"{name} installer exited with code {code}.", LogLevel.Warning);
-        }
-
-        private int RunProcess(string fileName, string arguments = "")
-        {
-            ProcessStartInfo psi = new ProcessStartInfo
-            {
-                FileName = fileName,
-                Arguments = arguments,
-                UseShellExecute = false,
-                CreateNoWindow = true
             };
-            using (Process proc = Process.Start(psi))
-            {
-                if (proc == null)
-                {
-                    Log($"Failed to start process: {fileName}", LogLevel.Error);
-                    return -1;
-                }
-                proc.WaitForExit();
-                return proc.ExitCode;
-            }
         }
 
-        // ── Shortcut creation (via WScript.Shell COM) ─────────────────────────────
-
-        private void CreateShortcut(string directory, string name, string targetPath, string workingDir)
+        private void FillPaths()
         {
-            try
+            string server = FileServerFQDN.Text;
+
+            if (ChkCloudCustomer.IsChecked == true)
             {
-                string lnkPath = Path.Combine(directory, name + ".lnk");
-                Type shellType = Type.GetTypeFromProgID("WScript.Shell");
-                dynamic shell = Activator.CreateInstance(shellType);
-                dynamic shortcut = shell.CreateShortcut(lnkPath);
-                shortcut.TargetPath = targetPath;
-                shortcut.WorkingDirectory = workingDir;
-                shortcut.Save();
-                Log($"Shortcut created: {lnkPath}", LogLevel.Success);
+                TxtRmsJmsPath.Text       = $"\\\\{server}\\FileSync\\rms\\onesolutionrms";
+                TxtMoblanPath.Text       = $"\\\\{server}\\FileSync\\rms\\moblan\\mfr";
+                TxtMupdatePath.Text      = $"\\\\{server}\\FileSync\\rms\\mupdate";
+                TxtOsmctInstallPath.Text = $"\\\\{server}\\FileSync\\rms\\mobmast\\onesolutionmct\\setup";
+                TxtSharedPath.Text       = $"\\\\{server}\\FileSync\\rms\\shared";
+                TxtReportViewerPath.Text = $"\\\\{server}\\FileSync\\cad\\onesolutioncad\\setup";
+                TxtCadPath.Text          = $"\\\\{server}\\FileSync\\cad\\std install";
             }
-            catch (Exception ex)
+            else
             {
-                Log($"Failed to create shortcut '{name}': {ex.Message}", LogLevel.Error);
-            }
-        }
-
-        // ── Folder creation + permissions ─────────────────────────────────────────
-
-        private void EnsureFolder(string folderPath)
-        {
-            try
-            {
-                Log($"Checking folder: {folderPath}", LogLevel.Info);
-
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                    Log($"Created folder: {folderPath}", LogLevel.Success);
-                }
-
-                SecurityIdentifier everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-                DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
-                DirectorySecurity acl = dirInfo.GetAccessControl();
-                FileSystemAccessRule rule = new FileSystemAccessRule(
-                    everyone,
-                    FileSystemRights.FullControl,
-                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
-                    PropagationFlags.None,
-                    AccessControlType.Allow);
-                acl.AddAccessRule(rule);
-                dirInfo.SetAccessControl(acl);
-
-                Log($"Granted Full Control to Everyone on: {folderPath}", LogLevel.Success);
-            }
-            catch (Exception ex)
-            {
-                Log($"Failed to configure folder '{folderPath}': {ex.Message}", LogLevel.Error);
+                string rmsFolder = TxtRMSFolder.Text;
+                string cadFolder = TxtCADFolder.Text;
+                TxtRmsJmsPath.Text       = $"\\\\{server}\\{rmsFolder}\\onesolutionrms";
+                TxtMoblanPath.Text       = $"\\\\{server}\\{rmsFolder}\\moblan\\mfr";
+                TxtMupdatePath.Text      = $"\\\\{server}\\{rmsFolder}\\mupdate";
+                TxtOsmctInstallPath.Text = $"\\\\{server}\\{rmsFolder}\\mobmast\\onesolutionmct\\setup";
+                TxtSharedPath.Text       = $"\\\\{server}\\{rmsFolder}\\shared";
+                TxtReportViewerPath.Text = $"\\\\{server}\\{cadFolder}\\onesolutioncad\\setup";
+                TxtCadPath.Text          = $"\\\\{server}\\{cadFolder}\\std install";
             }
         }
 
         // ── Logging ───────────────────────────────────────────────────────────────
 
-        private enum LogLevel { Info, Success, Warning, Error }
+        private void ClearLog()
+        {
+            RichTxtLog.Document.Blocks.Clear();
+        }
 
         private void Log(string message, LogLevel level = LogLevel.Info)
         {
@@ -460,68 +177,42 @@ namespace ONESolutionUtility_v1
                 else
                     brush = new SolidColorBrush(Color.FromRgb(100, 180, 240));
 
-                Run run = new Run($"[{DateTime.Now:HH:mm:ss}] {message}") { Foreground = brush };
-                Paragraph para = new Paragraph(run) { Margin = new Thickness(0) };
+                var run  = new Run($"[{DateTime.Now:HH:mm:ss}] {message}") { Foreground = brush };
+                var para = new Paragraph(run) { Margin = new Thickness(0) };
                 RichTxtLog.Document.Blocks.Add(para);
                 RichTxtLog.ScrollToEnd();
             });
         }
 
-        // ── Utility Helpers ───────────────────────────────────────────────────────────────
+        // ── Animation helper ──────────────────────────────────────────────────────
 
-        private void FillPaths()
+        private void AnimateColumnWidth(ColumnDefinition column, double toWidth, double durationSeconds = 0.3)
         {
-            if (ChkCloudCustomer.IsChecked == true)
+            double fromWidth    = column.Width.Value;
+            double delta        = toWidth - fromWidth;
+            int    frames       = (int)(120 * durationSeconds);
+            int    currentFrame = 0;
+            var    easing       = new CubicEase { EasingMode = EasingMode.EaseInOut };
+
+            var timer = new System.Windows.Threading.DispatcherTimer
             {
-                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\onesolutionrms";
-                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\moblan\\mfr";
-                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mupdate";
-                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mobmast\\onesolutionmct\\setup";
-                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\shared";
-                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\onesolutioncad\\setup";
-                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\std install";
-            }
-            else
+                Interval = TimeSpan.FromSeconds(durationSeconds / frames)
+            };
+
+            timer.Tick += (s, e) =>
             {
-                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\onesolutionrms";
-                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\moblan\\mfr";
-                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mupdate";
-                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mobmast\\onesolutionmct\\setup";
-                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\shared";
-                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\onesolutioncad\\setup";
-                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\std install";
-            }
+                currentFrame++;
+                double easedProgress = easing.Ease((double)currentFrame / frames);
+                column.Width = new GridLength(fromWidth + delta * easedProgress, GridUnitType.Pixel);
+
+                if (currentFrame >= frames)
+                {
+                    column.Width = new GridLength(toWidth, GridUnitType.Pixel);
+                    timer.Stop();
+                }
+            };
+
+            timer.Start();
         }
-
-		public void AnimateColumnWidth(ColumnDefinition column, double toWidth, double durationSeconds = 0.3)
-		{
-			double fromWidth = column.Width.Value;
-			double delta = toWidth - fromWidth;
-			int frames = (int)(120 * durationSeconds); // 120 FPS
-			int currentFrame = 0;
-			var easing = new CubicEase { EasingMode = EasingMode.EaseInOut };
-
-			var timer = new System.Windows.Threading.DispatcherTimer
-			{
-				Interval = TimeSpan.FromSeconds(durationSeconds / frames)
-			};
-
-			timer.Tick += (s, e) =>
-			{
-				currentFrame++;
-				double progress = (double)currentFrame / frames;
-				double easedProgress = easing.Ease(progress);
-				double newWidth = fromWidth + delta * easedProgress;
-				column.Width = new GridLength(newWidth, GridUnitType.Pixel);
-
-				if (currentFrame >= frames)
-				{
-					column.Width = new GridLength(toWidth, GridUnitType.Pixel);
-					timer.Stop();
-				}
-			};
-
-			timer.Start();
-		}
-	}
+    }
 }

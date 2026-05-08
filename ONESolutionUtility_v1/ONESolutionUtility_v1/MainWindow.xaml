@@ -9,7 +9,7 @@
             <Setter Property="Margin" Value="0,2,0,4"/>
             <Setter Property="Padding" Value="4,3"/>
             <Setter Property="Height" Value="23.96"/>
-      <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
         <Style TargetType="Label">
             <Setter Property="Padding" Value="0,4,4,0"/>
@@ -32,270 +32,274 @@
                        Foreground="White" FontSize="17" FontWeight="Bold"/>
         </Border>
 
-        <!-- Bottom: Log + Buttons -->
-        <Grid DockPanel.Dock="Bottom">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="180"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <TabControl>
 
-            <GroupBox Header="Output Log" Margin="4,4,4,0">
-                <RichTextBox x:Name="RichTxtLog" IsReadOnly="True"
-                             FontFamily="Consolas" FontSize="11"
-                             VerticalScrollBarVisibility="Auto"
-                             Background="#1E1E1E" Foreground="#DCDCDC"
-                             BorderThickness="0"/>
-            </GroupBox>
+            <!-- ═══════════════════════ Workstation Installation ═══════════════════════ -->
+            <TabItem Header="Workstation Installation">
+                <DockPanel>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal"
-                        HorizontalAlignment="Right" Margin="8,4,8,8">
-                <Button x:Name="BtnClear" Content="Clear Log"
-                        Width="90" Height="28" Margin="0,0,8,0"
-                        Click="BtnClear_Click"/>
-                <Button x:Name="BtnInstall" Content="Run Install"
-                        Width="130" Height="28"
-                        Background="#1E3A5F" Foreground="White"
-                        FontWeight="Bold" Click="BtnInstall_Click"/>
-            </StackPanel>
-        </Grid>
+                    <!-- Bottom: Log + Buttons -->
+                    <Grid DockPanel.Dock="Bottom">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="180"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-        <!-- Main config (scrollable) -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="4">
+                        <GroupBox Header="Output Log" Margin="4,4,4,0">
+                            <RichTextBox x:Name="RichTxtLog" IsReadOnly="True"
+                                         FontFamily="Consolas" FontSize="11"
+                                         VerticalScrollBarVisibility="Auto"
+                                         Background="#1E1E1E" Foreground="#DCDCDC"
+                                         BorderThickness="0"/>
+                        </GroupBox>
 
-                <!-- Row 1: Customer type + App toggles -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <GroupBox Header="Customer Type">
-                        <StackPanel>
-                            <CheckBox x:Name="ChkCloudCustomer" Content="Cloud Customer"
-                                      IsChecked="True" FontWeight="SemiBold" 
-                                      Checked="ChkCloudCustomer_Checked" 
-                                      Unchecked="ChkCloudCustomer_Unchecked"/>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal"
+                                    HorizontalAlignment="Right" Margin="8,4,8,8">
+                            <Button x:Name="BtnClear" Content="Clear Log"
+                                    Width="90" Height="28" Margin="0,0,8,0"
+                                    Click="BtnClear_Click"/>
+                            <Button x:Name="BtnInstall" Content="Run Install"
+                                    Width="130" Height="28"
+                                    Background="#1E3A5F" Foreground="White"
+                                    FontWeight="Bold" Click="BtnInstall_Click"/>
                         </StackPanel>
-                    </GroupBox>
-
-                    <GroupBox Grid.Column="1" Header="Applications to Install">
-                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <CheckBox x:Name="ChkRms"   Content="RMS"   IsChecked="False"  Width="90"/>
-                            <CheckBox x:Name="ChkJms"   Content="JMS"   IsChecked="False" Width="90"/>
-                            <CheckBox x:Name="ChkMfr"   Content="MFR"   IsChecked="False"  Width="90"/>
-                            <CheckBox x:Name="ChkCad"   Content="CAD"   IsChecked="False" Width="90"/>
-                            <CheckBox x:Name="ChkOsmct" Content="OSMCT" IsChecked="False"  Width="90"/>
-                        </WrapPanel>
-                    </GroupBox>
-                </Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
-
-                    <GroupBox x:Name ="FileServerGroup" Header="FileSync" Margin="4,4,0,4">
-                        <Grid Grid.ColumnSpan="2" x:Name="FileSyncServerGrid">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="170"/>
-                                <ColumnDefinition Width="600"/>
-                                <ColumnDefinition Width="70"/>
-                                <ColumnDefinition Width="70"/>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="70"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="24"/>
-                            </Grid.RowDefinitions>
-
-                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,0" Grid.RowSpan="1">Server FQDN</Label>
-							<TextBox Grid.Row="0" Grid.Column="1" x:Name="FileServerFQDN" HorizontalAlignment="Stretch" Margin="0,0,10,0"/>
-                            <Button Grid.Row="0" Grid.Column="2" x:Name="GenFilePaths" Content="Fill Paths"
-                                Width="70" Height="24"
-                                Background="#1E3A5F" Foreground="White"
-                                FontWeight="Bold" Click="GenFilePaths_Click"/>
-                            <Label Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" x:Name="RmsLabel" Margin="10,0,0,0" Grid.RowSpan="1" Visibility="Collapsed">RMS Folder</Label>
-                            <TextBox Grid.Row="0" Grid.Column="4" x:Name="TxtRMSFolder" Margin="0,0,0,0" Visibility="Collapsed"/>
-                            <Label Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" x:Name="CadLabel" Margin="10,0,0,0" Grid.RowSpan="1" Visibility="Collapsed">CAD Folder</Label>
-                            <TextBox Grid.Row="0" Grid.Column="6" x:Name="TxtCADFolder" Margin="0,0,0,0" Visibility="Collapsed"/>
-                        </Grid>
-                    </GroupBox>
-                    
-                </Grid>
-                <!-- Row 2: Network paths (left) + Local paths (right) -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition />
-						<RowDefinition />
-					</Grid.RowDefinitions>
-
-                    <GroupBox Header="Network Paths" Grid.Row="0" Grid.RowSpan="2">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="63"/>
-                                <ColumnDefinition Width="107"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                            </Grid.RowDefinitions>
-
-                            
-
-                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">RMS / JMS App Path</Label>
-                            <TextBox Grid.Row="0" Grid.Column="2" x:Name="TxtRmsJmsPath" Margin="0,2,0,4"/>
-
-                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Moblan Path (MFR)</Label>
-                            <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtMoblanPath" Margin="0,2,0,4"/>
-
-                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Mupdate Path (OSMCT)</Label>
-                            <TextBox Grid.Row="2" Grid.Column="2" x:Name="TxtMupdatePath" Margin="0,2,0,4"/>
-
-                            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">OSMCT Installer Path</Label>
-                            <TextBox Grid.Row="3" Grid.Column="2" x:Name="TxtOsmctInstallPath" Margin="0,2,0,4"/>
-
-                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Shared Path</Label>
-                            <TextBox Grid.Row="4" Grid.Column="2" x:Name="TxtSharedPath"
-                                     ToolTip="Folder containing: ONESolution RMS and JMS Components.msi, msodbcsql64_17.msi, vc_redist.x64.exe" Margin="0,2,0,4"/>
-                          
-                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">CAD Path</Label>
-                            <TextBox Grid.Row="5" Grid.Column="2" x:Name="TxtCadPath" Margin="0,2,0,4"/>
-                          
-                            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">Report Viewer Path</Label>
-                            <TextBox Grid.Row="6" Grid.Column="2" x:Name="TxtReportViewerPath" Margin="0,2,0,4"/>
-                        </Grid>
-                    </GroupBox>
-
-					<GroupBox Grid.Column="1" Grid.Row="0" Header="Local Folders">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="170"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                          
-                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Shortcut Destination</Label>
-                            <TextBox Grid.Row="0" Grid.Column="2" x:Name="TxtShortcutPath"
-                                  Text="C:\Users\Public\Desktop" Margin="0,2,0,4"/>
-                          
-                            <Label Grid.Row="1" Grid.Column="0">Superion Folder</Label>
-                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtSuperionPath"
-                                     Text="C:\ProgramData\Superion"/>
-
-                            <Label Grid.Row="2" Grid.Column="0">Mobfiles Folder</Label>
-                            <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMobfilesPath"
-                                     Text="C:\mobfiles"/>
-
-                            <Label Grid.Row="3" Grid.Column="0">Foxtmp Folder</Label>
-                            <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtFoxtmpPath"
-                                     Text="C:\foxtmp"/>
-
-                            <Label Grid.Row="4" Grid.Column="0">Ossimob Folder</Label>
-                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtOssimobPath"
-                                     Text="C:\ossimob"/>
-							
-						</Grid>
-                    </GroupBox>
-					<GroupBox Header="OSMCT Cloud Prep" Grid.Row="1" Grid.Column="1">
-						<Grid x:Name="GridOsmctConfigure" Grid.Row="5" Grid.ColumnSpan="2" Margin="0,0,0,0">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="*"/>
-							</Grid.ColumnDefinitions>
-							<Button Grid.Column="0" Grid.Row="0"
-                                Width="150" Height="28"
-                                Background="#1E3A5F" Foreground="White"
-                                FontWeight="Bold" Click="BtnPreInstallCloudOsmct_Click"
-                                Content="Pre-Install Cloud OSMCT"
-                                ToolTip="Run mupdate in preparation for a cloud migration. Will create a new C:\ossimob_cloud folder for go-live day."/>
-							<Button Grid.Column="1" Grid.Row="0" Margin="0,0,0,0"
-                                Width="150" Height="28"
-                                Background="#1E3A5F" Foreground="White"
-                                FontWeight="Bold" Click="BtnInstallCloudOsmct_Click"
-                                Content="Install Cloud OSMCT"
-                                ToolTip="Rename the ossimob folder to ossimob_backup, rename ossimob_cloud to ossimob."/>               
-						</Grid>
-					</GroupBox>
-                </Grid>
-
-                <!-- Row 3: Shortcut Names -->
-                <GroupBox Header="Shortcut Names">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Row="0" Grid.Column="0" Width="60">RMS</Label>
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtRmsName"      Text="ONESolution RMS"/>
-                        <Label Grid.Row="0" Grid.Column="3" Width="80">Cloud RMS</Label>
-                        <TextBox Grid.Row="0" Grid.Column="4" x:Name="TxtRmsCloudName" Text="ONESolution Cloud RMS"/>
-
-                        <Label Grid.Row="1" Grid.Column="0" Width="60">JMS</Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtJmsName"      Text="ONESolution JMS"/>
-                        <Label Grid.Row="1" Grid.Column="3" Width="80">Cloud JMS</Label>
-                        <TextBox Grid.Row="1" Grid.Column="4" x:Name="TxtJmsCloudName" Text="ONESolution Cloud JMS"/>
-
-                        <Label Grid.Row="2" Grid.Column="0" Width="60">MFR</Label>
-                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMfrName"      Text="ONESolution MFR"/>
-                        <Label Grid.Row="2" Grid.Column="3" Width="80">Cloud MFR</Label>
-                        <TextBox Grid.Row="2" Grid.Column="4" x:Name="TxtMfrCloudName" Text="ONESolution Cloud MFR"/>
                     </Grid>
-                </GroupBox>
 
-                <GroupBox Header="OSMCT / CAD Shortcut Names">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                    <!-- Main config (scrollable) -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="4">
 
-                        <Label Grid.Row="0" Grid.Column="0" Width="60">OSMCT</Label>
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtOsmctName"      Text="ONESolution MCT"/>
-                        <Label Grid.Row="0" Grid.Column="3" Width="80">Cloud OSMCT</Label>
-                        <TextBox Grid.Row="0" Grid.Column="4" x:Name="TxtOsmctCloudName" Text="ONESolution Cloud MCT"/>
+                            <!-- Row 1: Customer type + App toggles -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="180"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                        <Label Grid.Row="1" Grid.Column="0" Width="60">CAD</Label>
-                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtCadName" Text="ONESolution CAD"/>
-                    </Grid>
-                </GroupBox>
+                                <GroupBox Header="Customer Type">
+                                    <StackPanel>
+                                        <CheckBox x:Name="ChkCloudCustomer" Content="Cloud Customer"
+                                                  IsChecked="True" FontWeight="SemiBold"
+                                                  Checked="ChkCloudCustomer_Checked"
+                                                  Unchecked="ChkCloudCustomer_Unchecked"/>
+                                    </StackPanel>
+                                </GroupBox>
 
-            </StackPanel>
-        </ScrollViewer>
+                                <GroupBox Grid.Column="1" Header="Applications to Install">
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <CheckBox x:Name="ChkRms"   Content="RMS"   IsChecked="False" Width="90"/>
+                                        <CheckBox x:Name="ChkJms"   Content="JMS"   IsChecked="False" Width="90"/>
+                                        <CheckBox x:Name="ChkMfr"   Content="MFR"   IsChecked="False" Width="90"/>
+                                        <CheckBox x:Name="ChkCad"   Content="CAD"   IsChecked="False" Width="90"/>
+                                        <CheckBox x:Name="ChkOsmct" Content="OSMCT" IsChecked="False" Width="90"/>
+                                    </WrapPanel>
+                                </GroupBox>
+                            </Grid>
+
+                            <!-- FileSync / FileShare server row -->
+                            <GroupBox x:Name="FileServerGroup" Header="FileSync" Margin="4,4,4,4">
+                                <Grid x:Name="FileSyncServerGrid">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="170"/>
+                                        <ColumnDefinition Width="600"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="24"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Column="0">Server FQDN</Label>
+                                    <TextBox Grid.Column="1" x:Name="FileServerFQDN" Margin="0,0,10,0"/>
+                                    <Button Grid.Column="2" x:Name="GenFilePaths" Content="Fill Paths"
+                                            Width="70" Height="24"
+                                            Background="#1E3A5F" Foreground="White"
+                                            FontWeight="Bold" Click="GenFilePaths_Click"/>
+                                    <Label  Grid.Column="3" Grid.ColumnSpan="2" x:Name="RmsLabel" Margin="10,0,0,0" Visibility="Collapsed">RMS Folder</Label>
+                                    <TextBox Grid.Column="4" x:Name="TxtRMSFolder" Visibility="Collapsed"/>
+                                    <Label  Grid.Column="5" Grid.ColumnSpan="2" x:Name="CadLabel" Margin="10,0,0,0" Visibility="Collapsed">CAD Folder</Label>
+                                    <TextBox Grid.Column="6" x:Name="TxtCADFolder" Visibility="Collapsed"/>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Row 2: Network paths (left) + Local paths + OSMCT Cloud Prep (right) -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <GroupBox Header="Network Paths" Grid.Row="0" Grid.RowSpan="2">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="63"/>
+                                            <ColumnDefinition Width="107"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">RMS / JMS App Path</Label>
+                                        <TextBox Grid.Row="0" Grid.Column="2" x:Name="TxtRmsJmsPath" Margin="0,2,0,4"/>
+
+                                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Moblan Path (MFR)</Label>
+                                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtMoblanPath" Margin="0,2,0,4"/>
+
+                                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Mupdate Path (OSMCT)</Label>
+                                        <TextBox Grid.Row="2" Grid.Column="2" x:Name="TxtMupdatePath" Margin="0,2,0,4"/>
+
+                                        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">OSMCT Installer Path</Label>
+                                        <TextBox Grid.Row="3" Grid.Column="2" x:Name="TxtOsmctInstallPath" Margin="0,2,0,4"/>
+
+                                        <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Shared Path</Label>
+                                        <TextBox Grid.Row="4" Grid.Column="2" x:Name="TxtSharedPath"
+                                                 ToolTip="Folder containing: ONESolution RMS and JMS Components.msi, msodbcsql64_17.msi, vc_redist.x64.exe"
+                                                 Margin="0,2,0,4"/>
+
+                                        <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">CAD Path</Label>
+                                        <TextBox Grid.Row="5" Grid.Column="2" x:Name="TxtCadPath" Margin="0,2,0,4"/>
+
+                                        <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">Report Viewer Path</Label>
+                                        <TextBox Grid.Row="6" Grid.Column="2" x:Name="TxtReportViewerPath" Margin="0,2,0,4"/>
+                                    </Grid>
+                                </GroupBox>
+
+                                <GroupBox Grid.Column="1" Grid.Row="0" Header="Local Folders">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="170"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Label Grid.Row="0" Grid.Column="0">Shortcut Destination</Label>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtShortcutPath"
+                                                 Text="C:\Users\Public\Desktop"/>
+
+                                        <Label Grid.Row="1" Grid.Column="0">Superion Folder</Label>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtSuperionPath"
+                                                 Text="C:\ProgramData\Superion"/>
+
+                                        <Label Grid.Row="2" Grid.Column="0">Mobfiles Folder</Label>
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMobfilesPath"
+                                                 Text="C:\mobfiles"/>
+
+                                        <Label Grid.Row="3" Grid.Column="0">Foxtmp Folder</Label>
+                                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtFoxtmpPath"
+                                                 Text="C:\foxtmp"/>
+
+                                        <Label Grid.Row="4" Grid.Column="0">Ossimob Folder</Label>
+                                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtOssimobPath"
+                                                 Text="C:\ossimob"/>
+                                    </Grid>
+                                </GroupBox>
+
+                                <GroupBox Grid.Column="1" Grid.Row="1" Header="OSMCT Cloud Prep">
+                                    <Grid x:Name="GridOsmctConfigure">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button Grid.Column="0"
+                                                Width="150" Height="28"
+                                                Background="#1E3A5F" Foreground="White"
+                                                FontWeight="Bold" Click="BtnPreInstallCloudOsmct_Click"
+                                                Content="Pre-Install Cloud OSMCT"
+                                                ToolTip="Run mupdate in preparation for a cloud migration. Will create a new C:\ossimob_cloud folder for go-live day."/>
+                                        <Button Grid.Column="1"
+                                                Width="150" Height="28"
+                                                Background="#1E3A5F" Foreground="White"
+                                                FontWeight="Bold" Click="BtnInstallCloudOsmct_Click"
+                                                Content="Install Cloud OSMCT"
+                                                ToolTip="Rename the ossimob folder to ossimob_backup, rename ossimob_cloud to ossimob."/>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+
+                            <!-- Row 3: Shortcut Names -->
+                            <GroupBox Header="Shortcut Names">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Row="0" Grid.Column="0" Width="60">RMS</Label>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtRmsName"      Text="ONESolution RMS"/>
+                                    <Label Grid.Row="0" Grid.Column="3" Width="80">Cloud RMS</Label>
+                                    <TextBox Grid.Row="0" Grid.Column="4" x:Name="TxtRmsCloudName" Text="ONESolution Cloud RMS"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0" Width="60">JMS</Label>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtJmsName"      Text="ONESolution JMS"/>
+                                    <Label Grid.Row="1" Grid.Column="3" Width="80">Cloud JMS</Label>
+                                    <TextBox Grid.Row="1" Grid.Column="4" x:Name="TxtJmsCloudName" Text="ONESolution Cloud JMS"/>
+
+                                    <Label Grid.Row="2" Grid.Column="0" Width="60">MFR</Label>
+                                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMfrName"      Text="ONESolution MFR"/>
+                                    <Label Grid.Row="2" Grid.Column="3" Width="80">Cloud MFR</Label>
+                                    <TextBox Grid.Row="2" Grid.Column="4" x:Name="TxtMfrCloudName" Text="ONESolution Cloud MFR"/>
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Header="OSMCT / CAD Shortcut Names">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Row="0" Grid.Column="0" Width="60">OSMCT</Label>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtOsmctName"      Text="ONESolution MCT"/>
+                                    <Label Grid.Row="0" Grid.Column="3" Width="80">Cloud OSMCT</Label>
+                                    <TextBox Grid.Row="0" Grid.Column="4" x:Name="TxtOsmctCloudName" Text="ONESolution Cloud MCT"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0" Width="60">CAD</Label>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtCadName" Text="ONESolution CAD"/>
+                                </Grid>
+                            </GroupBox>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </DockPanel>
+            </TabItem>
+
+        </TabControl>
     </DockPanel>
 </Window>
-
-    
