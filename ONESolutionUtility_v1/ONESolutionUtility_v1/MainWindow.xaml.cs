@@ -54,20 +54,26 @@ namespace ONESolutionUtility_v1
         private void GenFilePaths_Click(object sender, RoutedEventArgs e) => FillPaths();
 
         private void BtnClear_Click(object sender, RoutedEventArgs e) => ClearLog();
-
-        private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
+		private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
-            Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
-        }
+            try
+            {
+                CopyDir(Migration_Txtossimobpath.Text, Migration_Txtossimobcloudpath.Text);
+            } 
+            catch
+            {
+                Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
+            }
+		}
 
         private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
             Log("Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
         }
 
-        // ── Cloud customer toggle ─────────────────────────────────────────────────
+		// ── Cloud customer toggle ─────────────────────────────────────────────────
 
-        private void ChkCloudCustomer_Checked(object sender, RoutedEventArgs e)
+		private void ChkCloudCustomer_Checked(object sender, RoutedEventArgs e)
         {
             if (FileServerGroup == null) return;
 
@@ -93,19 +99,6 @@ namespace ONESolutionUtility_v1
             TxtCADFolder.Visibility = Visibility.Visible;
         }
 
-		private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-			    //throw new NotImplementedException();
-
-                CopyDir("C:\\temp\\SQL NEW Backup and Restore Scripts\\", "C:\\newdir\\");
-            } 
-            catch
-            {
-                Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
-            }
-		}
 
         private InstallConfig BuildConfig()
         {
@@ -176,10 +169,13 @@ namespace ONESolutionUtility_v1
 
         private void ClearLog()
         {
-            RichTxtLog.Document.Blocks.Clear();
-        }
+			if (MigrationRichTxtLog.IsVisible)
+				MigrationRichTxtLog.Document.Blocks.Clear();
+            else
+				RichTxtLog.Document.Blocks.Clear();
+		}
 
-        private void Log(string message, LogLevel level = LogLevel.Info)
+		private void Log(string message, LogLevel level = LogLevel.Info)
         {
             Dispatcher.Invoke(() =>
             {
@@ -195,61 +191,62 @@ namespace ONESolutionUtility_v1
 
                 var run  = new Run($"[{DateTime.Now:HH:mm:ss}] {message}") { Foreground = brush };
                 var para = new Paragraph(run) { Margin = new Thickness(0) };
-                RichTxtLog.Document.Blocks.Add(para);
-                RichTxtLog.ScrollToEnd();
+
+                // Figure out 
+                if (MigrationRichTxtLog.IsVisible)
+                {
+                    MigrationRichTxtLog.Document.Blocks.Add(para);
+                    MigrationRichTxtLog.ScrollToEnd();
+				}
+                else
+                {
+                    RichTxtLog.Document.Blocks.Add(para);
+                    RichTxtLog.ScrollToEnd();
+                }
             });
         }
-
-        // ── Animation helper ──────────────────────────────────────────────────────
-
-        private void AnimateColumnWidth(ColumnDefinition column, double toWidth, double durationSeconds = 0.3)
-        {
-            if (ChkCloudCustomer.IsChecked == true)
-            {
-                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\onesolutionrms";
-                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\moblan\\mfr";
-                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mupdate";
-                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\mobmast\\onesolutionmct\\setup";
-                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\rms\\shared";
-                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\onesolutioncad\\setup";
-                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\FileSync\\cad\\std install";
-            }
-            else
-            {
-                TxtRmsJmsPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\onesolutionrms";
-                TxtMoblanPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\moblan\\mfr";
-                TxtMupdatePath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mupdate";
-                TxtOsmctInstallPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\mobmast\\onesolutionmct\\setup";
-                TxtSharedPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtRMSFolder}\\shared";
-                TxtReportViewerPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\onesolutioncad\\setup";
-                TxtCadPath.Text = $"\\\\{FileServerFQDN.Text}\\{TxtCADFolder}\\std install";
-            }
-        }
-
         private void CopyDir(string source, string destination)
         {
             try
             {
-			    // Create directory if it doesn't exist
-			    if (Directory.Exists(destination))
-                    Log($"{destination} already exists");
-                else
+                // Create the destination directory if it doesn't exist
+                if (!Directory.Exists(destination))
+                {
+                    Log($"'{destination}' does not exist, attempting to create.", LogLevel.Info);
                     Directory.CreateDirectory(destination);
-
-				string[] directory_files = Directory.GetFiles(source);
-                foreach (string file in directory_files)
-                {
-                    File.Copy(file, destination);
-                }
-
-                if(Directory.Equals(destination, source))
-                {
-                    Log($"Successfully copied {source} to {destination}!", LogLevel.Success);
+                    Log($"'{destination}' created successfully!", LogLevel.Success);
                 }
                 else
                 {
-                    Log($"Directory: {destination} copy was unsuccessful. {destination} is not equal to {source}. Compare folders manually.", LogLevel.Warning);
+                    Log($"'{destination}' already exists", LogLevel.Info);
                 }
+
+                Log($"Attempting to create all subdirectories", LogLevel.Info);
+                // Copy all subdirectories
+                foreach (string dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+                {
+                    string destDir = dirPath.Replace(source, destination);
+                    if (!Directory.Exists(destDir))
+                    {
+                        Directory.CreateDirectory(destDir);
+                        Log($"Created '{destDir}'", LogLevel.Success);
+					}
+                    else
+                    {
+						Log($"'{destDir}' already exists - skipping.", LogLevel.Info);
+					}
+				}
+                Log("All subdirectories exist. Attempoting file copy now.",LogLevel.Success);
+
+                // Copy all files
+                foreach (string filePath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories))
+                {
+                    string destFile = filePath.Replace(source, destination);
+                    File.Copy(filePath, destFile, true);
+                    Log($"Copied '{filePath}' successfully.",LogLevel.Success);
+                }
+
+                Log($"Successfully copied '{source}' to '{destination}'!", LogLevel.Success);
             }
             catch (Exception ex)
             {
@@ -259,24 +256,29 @@ namespace ONESolutionUtility_v1
 
         private void RenameDir(string source, string destination)
         {
+            Log($"Attempting to move {source} to {destination}", LogLevel.Info);
             try
             {
                 if (!Directory.Exists(destination))
                 {
-                    Directory.CreateDirectory(destination);
-                }
-                else
+                    Log($"{destination} does not exist, attempting to create.", LogLevel.Info);
+					Directory.CreateDirectory(destination);
+					Log($"{destination} created successfully!", LogLevel.Success);
+				}
+				else
                 {
                     Directory.Move(source, destination);
                 }
 
-				Log($"{source} successfully renamed to {destination}.", LogLevel.Success);
+				Log($"{source} successfully moved to {destination}.", LogLevel.Success);
 			}
             catch (Exception)
             {
-                Log($"{source} unsuccessfully renamed to {destination}.", LogLevel.Error);
+                Log($"{source} unsuccessfully moved to {destination}.", LogLevel.Error);
             }
         }
+
+        // ── Animation helper ──────────────────────────────────────────────────────
 
 		public void AnimateColumnWidth(ColumnDefinition column, double toWidth, double durationSeconds = 0.3)
 		{
