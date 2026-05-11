@@ -242,9 +242,13 @@ namespace ONESolutionUtility_v1
                 foreach (string filePath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories))
                 {
                     string destFile = filePath.Replace(source, destination);
+                    if(File.Exists(destFile))
+                    {
+                        Log($"'{filePath}' exists in '{destination}' - overwritting.", LogLevel.Info);
+                    }
                     File.Copy(filePath, destFile, true);
-                    Log($"Copied '{filePath}' successfully.",LogLevel.Success);
-                }
+					Log($"'{filePath}' copied successfully.", LogLevel.Success);
+				}
 
                 Log($"Successfully copied '{source}' to '{destination}'!", LogLevel.Success);
             }
