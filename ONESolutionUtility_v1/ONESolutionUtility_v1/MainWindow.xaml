@@ -225,11 +225,13 @@
                                                 Width="150" Height="28"
                                                 Background="#1E3A5F" Foreground="White"
                                                 FontWeight="Bold"
+												IsEnabled="False"
                                                 Content="Pre-Install Cloud OSMCT"
                                                 ToolTip="Run mupdate in preparation for a cloud migration. Will create a new C:\ossimob_cloud folder for go-live day."/>
                                         <Button Grid.Column="1"
                                                 Width="150" Height="28"
                                                 Background="#1E3A5F" Foreground="White"
+												IsEnabled="False"
                                                 FontWeight="Bold"
                                                 Content="Install Cloud OSMCT"
                                                 ToolTip="Rename the ossimob folder to ossimob_backup, rename ossimob_cloud to ossimob."/>
@@ -352,11 +354,12 @@
 												 Text="C:\ossimob"/>
 									</Grid>
 									<Button Grid.Column="0" Grid.Row="1"
-                                        Width="150" Height="28"
-                                        Background="#1E3A5F" Foreground="White"
-                                        FontWeight="Bold" Click="BtnPreInstallCloudOsmct_Click"
-                                        Content="Pre-Install Cloud OSMCT"
-                                        ToolTip="Run mupdate in preparation for a cloud migration. Will create a new C:\ossimob_cloud folder for go-live day."/>
+											x:Name="BtnPreInstallCloudOsmct"
+                                            Width="150" Height="28"
+                                            Background="#1E3A5F" Foreground="White"
+                                            FontWeight="Bold" Click="BtnPreInstallCloudOsmct_Click"
+                                            Content="Pre-Install Cloud OSMCT"
+                                            ToolTip="Run mupdate in preparation for a cloud migration. Will create a new C:\ossimob_cloud folder for go-live day."/>
 									<Grid x:Name="Migration_Ossimob_cloud_layout" Height="40" Grid.Row="0" Grid.Column="1">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition Width="100"/>
@@ -367,11 +370,12 @@
 									 Text="C:\ossimob_cloud"/>
 									</Grid>
 									<Button Grid.Column="1" Grid.Row="1"
-                                        Width="150" Height="28"
-                                        Background="#1E3A5F" Foreground="White"
-                                        FontWeight="Bold" Click="BtnInstallCloudOsmct_Click"
-                                        Content="Install Cloud OSMCT"
-                                        ToolTip="Rename the ossimob folder to ossimob_backup, rename ossimob_cloud to ossimob."/>
+											x:Name="BtnInstallCloudOsmct"
+                                            Width="150" Height="28"
+                                            Background="#1E3A5F" Foreground="White"
+                                            FontWeight="Bold" Click="BtnInstallCloudOsmct_Click"
+                                            Content="Install Cloud OSMCT"
+                                            ToolTip="Rename the ossimob folder to ossimob_backup, rename ossimob_cloud to ossimob."/>
 							    </Grid>
 						    </GroupBox>
 					    </StackPanel>

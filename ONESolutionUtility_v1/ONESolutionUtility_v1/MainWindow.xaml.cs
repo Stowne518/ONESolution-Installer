@@ -58,17 +58,43 @@ namespace ONESolutionUtility_v1
         {
             try
             {
-                CopyDir(Migration_Txtossimobpath.Text, Migration_Txtossimobcloudpath.Text);
+                CopyDir(FileServerFQDN.Text + "\\filesync\\rms\\mobmast\\", Migration_Txtossimobcloudpath.Text);
             } 
-            catch
+            catch (Exception ex)
             {
-                Log("Pre-Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
+                Log($"Cloud OSMCT not successfully installed: {ex.Message}", LogLevel.Error);
             }
 		}
 
         private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
-            Log("Install Cloud OSMCT not implemented yet.", LogLevel.Warning);
+            BtnInstallCloudOsmct.IsEnabled = false;
+            string ossimobPath = Migration_Txtossimobpath.Text;
+            string ossimobCloudPath = Migration_Txtossimobcloudpath.Text;
+
+            // TODO: Create more protection around existing folders. The Directory.Move method doesn't like it when a directory already exists.
+            // Need a backup to use the CopyDir and delete the old one if the folder is already there or something similar.
+            Thread thread = new Thread(() =>
+            {
+                try
+                {
+                    // 1. Move current ossimob to ossimob_backup
+                    RenameDir(ossimobPath, ossimobPath + "_backup");
+
+                    // 2. If we succeed, move ossimob_cloud to ossimob
+                    RenameDir(ossimobCloudPath, ossimobPath);
+                }
+                catch (Exception ex)
+                {
+                    Log($"Cloud OSMCT not successfully installed: {ex.Message}", LogLevel.Error);
+                }
+                finally
+                {
+                    Dispatcher.Invoke(() => BtnInstallCloudOsmct.IsEnabled = true);
+                }
+            });
+            thread.IsBackground = true;
+            thread.Start();
         }
 
 		// ── Cloud customer toggle ─────────────────────────────────────────────────
@@ -77,28 +103,32 @@ namespace ONESolutionUtility_v1
         {
             if (FileServerGroup == null) return;
 
-            FileServerGroup.Header = "FileSync";
+            FileServerGroup.Header              = "FileSync";
             AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 600);
-            RmsLabel.Visibility    = Visibility.Collapsed;
-            CadLabel.Visibility    = Visibility.Collapsed;
-            TxtRMSFolder.Text      = "";
-            TxtRMSFolder.Visibility = Visibility.Collapsed;
-            TxtCADFolder.Text      = "";
-            TxtCADFolder.Visibility = Visibility.Collapsed;
-        }
+            RmsLabel.Visibility                 = Visibility.Collapsed;
+            CadLabel.Visibility                 = Visibility.Collapsed;
+            TxtRMSFolder.Text                   = "";
+            TxtRMSFolder.Visibility             = Visibility.Collapsed;
+            TxtCADFolder.Text                   = "";
+            TxtCADFolder.Visibility             = Visibility.Collapsed;
+            BtnPreInstallCloudOsmct.IsEnabled   = true;
+            BtnInstallCloudOsmct.IsEnabled      = true;
+
+		}
 
         private void ChkCloudCustomer_Unchecked(object sender, RoutedEventArgs e)
         {
             if (FileServerGroup == null) return;
 
-            FileServerGroup.Header = "FileShare";
+            FileServerGroup.Header              = "FileShare";
             AnimateColumnWidth(FileSyncServerGrid.ColumnDefinitions[1], 120);
-            RmsLabel.Visibility     = Visibility.Visible;
-            CadLabel.Visibility     = Visibility.Visible;
-            TxtRMSFolder.Visibility = Visibility.Visible;
-            TxtCADFolder.Visibility = Visibility.Visible;
-        }
-
+            RmsLabel.Visibility                 = Visibility.Visible;
+            CadLabel.Visibility                 = Visibility.Visible;
+            TxtRMSFolder.Visibility             = Visibility.Visible;
+            TxtCADFolder.Visibility             = Visibility.Visible;
+			BtnPreInstallCloudOsmct.IsEnabled   = false;
+			BtnInstallCloudOsmct.IsEnabled      = false;
+		}
 
         private InstallConfig BuildConfig()
         {
@@ -260,25 +290,25 @@ namespace ONESolutionUtility_v1
 
         private void RenameDir(string source, string destination)
         {
-            Log($"Attempting to move {source} to {destination}", LogLevel.Info);
+
+            Log($"Attempting to move '{source}' to '{destination}'", LogLevel.Info);
             try
             {
-                if (!Directory.Exists(destination))
+                if (Directory.Exists(destination))
                 {
-                    Log($"{destination} does not exist, attempting to create.", LogLevel.Info);
-					Directory.CreateDirectory(destination);
-					Log($"{destination} created successfully!", LogLevel.Success);
-				}
-				else
+                    Log($"'{destination}' does not exist, attempting to create.", LogLevel.Info);
+                    Directory.Move(destination, destination + System.DateTime.Now.ToShortDateString());
+                    Log($"'{destination + System.DateTime.Now.ToShortDateString()}' created successfully!", LogLevel.Success);
+                }
+                else
                 {
                     Directory.Move(source, destination);
+    				Log($"'{source}' successfully moved to '{destination}'.", LogLevel.Success);
                 }
-
-				Log($"{source} successfully moved to {destination}.", LogLevel.Success);
 			}
-            catch (Exception)
+            catch (Exception ex)
             {
-                Log($"{source} unsuccessfully moved to {destination}.", LogLevel.Error);
+                Log($"'{source}' unsuccessfully moved to '{destination}': {ex.Message}.", LogLevel.Error);
             }
         }
 
