@@ -20,14 +20,6 @@ namespace ONESolutionUtility_v1
             InitializeComponent();
             MaxHeight  = SystemParameters.WorkArea.Height;
             _installer = new WorkstationInstaller(Log);
-
-            // Pre-fill for customer specific hard-coded paths
-            bool paths_filled = false;
-            while (!paths_filled)
-            {
-                FillPaths();
-                paths_filled = true;
-            }
         }
 
         // ── Button handlers ───────────────────────────────────────────────────────
@@ -64,7 +56,7 @@ namespace ONESolutionUtility_v1
         {
             BtnPreInstallCloudOsmct.IsEnabled = false;
             string filesync_server_path = $"\\\\{FileServerFQDN.Text}\\filesync\\rms\\mobmast\\";
-            string ossimob_cloud_path = $"{TxtOssimobPath.Text}_cloud\\";
+            string ossimob_cloud_path = $"{Migration_Txtossimobcloudpath.Text}\\";
             string osupdater_path = $"\\\\{FileServerFQDN.Text}\\filesync\\rms\\mob_mobmast_osupdater\\";
             
             Thread thread = new Thread(() =>
@@ -92,8 +84,8 @@ namespace ONESolutionUtility_v1
         private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
             BtnInstallCloudOsmct.IsEnabled = false;
-            string ossimobPath = TxtOssimobPath.Text;
-            string ossimobCloudPath = TxtOssimobPath.Text + "_cloud";
+            string ossimobPath = Migration_Txtossimobpath.Text;
+            string ossimobCloudPath = Migration_Txtossimobcloudpath.Text;
 
             // TODO: Create more protection around existing folders. The Directory.Move method doesn't like it when a directory already exists.
             // Need a backup to use the CopyDir and delete the old one if the folder is already there or something similar.
