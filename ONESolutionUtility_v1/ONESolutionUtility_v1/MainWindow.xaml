@@ -227,6 +227,7 @@
                                                 Background="#1E3A5F" Foreground="White"
                                                 FontWeight="Bold"
 												IsEnabled="True"
+												Click="BtnPreInstallCloudOsmct_Click"
 												x:Name="BtnPreInstallCloudOsmct"
                                                 Content="Pre-Install Cloud OSMCT"
                                                 ToolTip="Run mupdate in preparation for a cloud migration. Will create a new C:\ossimob_cloud folder for go-live day."/>
@@ -235,6 +236,7 @@
                                                 Background="#1E3A5F" Foreground="White"
 												x:Name="BtnInstallCloudOsmct"
 												IsEnabled="True"
+												Click="BtnInstallCloudOsmct_Click"
                                                 FontWeight="Bold"
                                                 Content="Install Cloud OSMCT"
                                                 ToolTip="Rename the ossimob folder to ossimob_backup, rename ossimob_cloud to ossimob."/>
