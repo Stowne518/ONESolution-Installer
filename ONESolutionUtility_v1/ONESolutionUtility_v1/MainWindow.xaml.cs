@@ -15,7 +15,6 @@ namespace ONESolutionUtility_v1
     public partial class MainWindow : Window
     {
         private readonly WorkstationInstaller _installer;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -24,7 +23,6 @@ namespace ONESolutionUtility_v1
         }
 
         // ── Button handlers ───────────────────────────────────────────────────────
-
         private void BtnInstall_Click(object sender, RoutedEventArgs e)
         {
             BtnInstall.IsEnabled = false;
@@ -58,7 +56,7 @@ namespace ONESolutionUtility_v1
         {
             try
             {
-                CopyDir(FileServerFQDN.Text + "\\filesync\\rms\\mobmast\\", Migration_Txtossimobcloudpath.Text);
+                CopyDir(FileServerFQDN.Text + "\\filesync\\rms\\mobmast\\", TxtOssimobPath.Text + "_cloud");
             } 
             catch (Exception ex)
             {
@@ -69,8 +67,8 @@ namespace ONESolutionUtility_v1
         private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
             BtnInstallCloudOsmct.IsEnabled = false;
-            string ossimobPath = Migration_Txtossimobpath.Text;
-            string ossimobCloudPath = Migration_Txtossimobcloudpath.Text;
+            string ossimobPath = TxtOssimobPath.Text;
+            string ossimobCloudPath = TxtOssimobPath.Text + "_cloud";
 
             // TODO: Create more protection around existing folders. The Directory.Move method doesn't like it when a directory already exists.
             // Need a backup to use the CopyDir and delete the old one if the folder is already there or something similar.
@@ -199,10 +197,7 @@ namespace ONESolutionUtility_v1
 
         private void ClearLog()
         {
-			if (MigrationRichTxtLog.IsVisible)
-				MigrationRichTxtLog.Document.Blocks.Clear();
-            else
-				RichTxtLog.Document.Blocks.Clear();
+			RichTxtLog.Document.Blocks.Clear();
 		}
 
 		private void Log(string message, LogLevel level = LogLevel.Info)
@@ -221,18 +216,8 @@ namespace ONESolutionUtility_v1
 
                 var run  = new Run($"[{DateTime.Now:HH:mm:ss}] {message}") { Foreground = brush };
                 var para = new Paragraph(run) { Margin = new Thickness(0) };
-
-                // Figure out 
-                if (MigrationRichTxtLog.IsVisible)
-                {
-                    MigrationRichTxtLog.Document.Blocks.Add(para);
-                    MigrationRichTxtLog.ScrollToEnd();
-				}
-                else
-                {
-                    RichTxtLog.Document.Blocks.Add(para);
-                    RichTxtLog.ScrollToEnd();
-                }
+                RichTxtLog.Document.Blocks.Add(para);
+                RichTxtLog.ScrollToEnd();
             });
         }
         private void CopyDir(string source, string destination)

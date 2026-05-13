@@ -79,7 +79,7 @@
                                 <GroupBox Header="Customer Type">
                                     <StackPanel>
                                         <CheckBox x:Name="ChkCloudCustomer" Content="Cloud Customer"
-                                                  IsChecked="True" FontWeight="SemiBold"
+                                                  IsChecked="True" FontWeight="SemiBold" IsEnabled="False"
                                                   Checked="ChkCloudCustomer_Checked"
                                                   Unchecked="ChkCloudCustomer_Unchecked"/>
                                     </StackPanel>
@@ -113,7 +113,7 @@
                                     </Grid.RowDefinitions>
 
                                     <Label Grid.Column="0">Server FQDN</Label>
-                                    <TextBox Grid.Column="1" x:Name="FileServerFQDN" Margin="0,0,10,0"/>
+                                    <TextBox Grid.Column="1" x:Name="FileServerFQDN" Margin="0,0,10,0" IsEnabled="False" Text=""/>
                                     <Button Grid.Column="2" x:Name="GenFilePaths" Content="Fill Paths"
                                             Width="70" Height="24"
                                             Background="#1E3A5F" Foreground="White"
@@ -154,27 +154,27 @@
                                         </Grid.RowDefinitions>
 
                                         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">RMS / JMS App Path</Label>
-                                        <TextBox Grid.Row="0" Grid.Column="2" x:Name="TxtRmsJmsPath" Margin="0,2,0,4"/>
+										<TextBox Grid.Row="0" Grid.Column="2" x:Name="TxtRmsJmsPath" IsEnabled="False" Margin="0,2,0,4"/>
 
                                         <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Moblan Path (MFR)</Label>
-                                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtMoblanPath" Margin="0,2,0,4"/>
+										<TextBox Grid.Row="1" Grid.Column="2" x:Name="TxtMoblanPath" IsEnabled="False" Margin="0,2,0,4"/>
 
                                         <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Mupdate Path (OSMCT)</Label>
-                                        <TextBox Grid.Row="2" Grid.Column="2" x:Name="TxtMupdatePath" Margin="0,2,0,4"/>
+										<TextBox Grid.Row="2" Grid.Column="2" x:Name="TxtMupdatePath" IsEnabled="False" Margin="0,2,0,4"/>
 
                                         <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">OSMCT Installer Path</Label>
-                                        <TextBox Grid.Row="3" Grid.Column="2" x:Name="TxtOsmctInstallPath" Margin="0,2,0,4"/>
+										<TextBox Grid.Row="3" Grid.Column="2" x:Name="TxtOsmctInstallPath" Text="" IsEnabled="False" Margin="0,2,0,4"/>
 
                                         <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">Shared Path</Label>
-                                        <TextBox Grid.Row="4" Grid.Column="2" x:Name="TxtSharedPath"
+										<TextBox Grid.Row="4" Grid.Column="2" x:Name="TxtSharedPath" IsEnabled="False"
                                                  ToolTip="Folder containing: ONESolution RMS and JMS Components.msi, msodbcsql64_17.msi, vc_redist.x64.exe"
                                                  Margin="0,2,0,4"/>
 
                                         <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,30" Grid.RowSpan="2">CAD Path</Label>
-                                        <TextBox Grid.Row="5" Grid.Column="2" x:Name="TxtCadPath" Margin="0,2,0,4"/>
+										<TextBox Grid.Row="5" Grid.Column="2" x:Name="TxtCadPath" Margin="0,2,0,4" IsEnabled="False"/>
 
                                         <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">Report Viewer Path</Label>
-                                        <TextBox Grid.Row="6" Grid.Column="2" x:Name="TxtReportViewerPath" Margin="0,2,0,4"/>
+										<TextBox Grid.Row="6" Grid.Column="2" x:Name="TxtReportViewerPath" Margin="0,2,0,4" IsEnabled="False"/>
                                     </Grid>
                                 </GroupBox>
 
@@ -193,23 +193,23 @@
                                         </Grid.RowDefinitions>
 
                                         <Label Grid.Row="0" Grid.Column="0">Shortcut Destination</Label>
-                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtShortcutPath"
+										<TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtShortcutPath" IsEnabled="False"
                                                  Text="C:\Users\Public\Desktop"/>
 
                                         <Label Grid.Row="1" Grid.Column="0">Superion Folder</Label>
-                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtSuperionPath"
+										<TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtSuperionPath" IsEnabled="False"
                                                  Text="C:\ProgramData\Superion"/>
 
                                         <Label Grid.Row="2" Grid.Column="0">Mobfiles Folder</Label>
-                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMobfilesPath"
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMobfilesPath" IsEnabled="False"
                                                  Text="C:\mobfiles"/>
 
                                         <Label Grid.Row="3" Grid.Column="0">Foxtmp Folder</Label>
-                                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtFoxtmpPath"
+										<TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtFoxtmpPath" IsEnabled="False"
                                                  Text="C:\foxtmp"/>
 
                                         <Label Grid.Row="4" Grid.Column="0">Ossimob Folder</Label>
-                                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtOssimobPath"
+										<TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtOssimobPath" IsEnabled="False"
                                                  Text="C:\ossimob"/>
                                     </Grid>
                                 </GroupBox>
@@ -225,13 +225,15 @@
                                                 Width="150" Height="28"
                                                 Background="#1E3A5F" Foreground="White"
                                                 FontWeight="Bold"
-												IsEnabled="False"
+												IsEnabled="True"
+												x:Name="BtnPreInstallCloudOsmct"
                                                 Content="Pre-Install Cloud OSMCT"
                                                 ToolTip="Run mupdate in preparation for a cloud migration. Will create a new C:\ossimob_cloud folder for go-live day."/>
                                         <Button Grid.Column="1"
                                                 Width="150" Height="28"
                                                 Background="#1E3A5F" Foreground="White"
-												IsEnabled="False"
+												x:Name="BtnInstallCloudOsmct"
+												IsEnabled="True"
                                                 FontWeight="Bold"
                                                 Content="Install Cloud OSMCT"
                                                 ToolTip="Rename the ossimob folder to ossimob_backup, rename ossimob_cloud to ossimob."/>
@@ -303,9 +305,9 @@
             </TabItem>
 			
 			<!-- ═══════════════════════ Migration Processes ═══════════════════════ -->
-			<TabItem x:Name="Migrationtabwindow" Header="Migration">
+			<!--<TabItem x:Name="Migrationtabwindow" Header="Migration">
 				<DockPanel>
-					<!-- Bottom: Log + Buttons -->
+					--><!-- Bottom: Log + Buttons --><!--
 					<Grid DockPanel.Dock="Bottom">
 						
 						<Grid.RowDefinitions>
@@ -329,10 +331,10 @@
 						</StackPanel>
 					</Grid>
 					
-					<!-- Main migration tab -->
+					--><!-- Main migration tab --><!--
 					<ScrollViewer VerticalScrollBarVisibility="Auto">
 					    <StackPanel Margin="4">
-							<!-- Ossimob Cloud pre-install and Rename -->
+							--><!-- Ossimob Cloud pre-install and Rename --><!--
 						    <GroupBox Header="OSMCT Cloud Prep" Height="110">
 							    <Grid DockPanel.Dock="Top" x:Name="MigrationGridOsmctConfigure" >
 								    <Grid.ColumnDefinitions>
@@ -381,7 +383,7 @@
 					    </StackPanel>
 					</ScrollViewer>
 				</DockPanel>
-			</TabItem>
+			</TabItem>-->
         </TabControl>
     </DockPanel>
 </Window>
