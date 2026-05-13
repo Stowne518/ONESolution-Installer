@@ -20,6 +20,14 @@ namespace ONESolutionUtility_v1
             InitializeComponent();
             MaxHeight  = SystemParameters.WorkArea.Height;
             _installer = new WorkstationInstaller(Log);
+
+            // Pre-fill for customer specific hard-coded paths
+            bool paths_filled = false;
+            while (!paths_filled)
+            {
+                FillPaths();
+                paths_filled = true;
+            }
         }
 
         // ── Button handlers ───────────────────────────────────────────────────────
@@ -167,9 +175,9 @@ namespace ONESolutionUtility_v1
 
         private void FillPaths()
         {
-            string server = FileServerFQDN.Text;
+            string server = "rmcsmessagefs.ci.rocky-mount.nc.us";
 
-            if (ChkCloudCustomer.IsChecked == true)
+			if (ChkCloudCustomer.IsChecked == true)
             {
                 TxtRmsJmsPath.Text       = $"\\\\{server}\\FileSync\\rms\\onesolutionrms";
                 TxtMoblanPath.Text       = $"\\\\{server}\\FileSync\\rms\\moblan\\mfr";
