@@ -15,16 +15,22 @@ namespace ONESolutionUtility_v1
     public partial class MainWindow : Window
     {
         private readonly WorkstationInstaller _installer;
-
         public MainWindow()
         {
             InitializeComponent();
             MaxHeight  = SystemParameters.WorkArea.Height;
             _installer = new WorkstationInstaller(Log);
+
+            // Pre-fill for customer specific hard-coded paths
+            bool paths_filled = false;
+            while (!paths_filled)
+            {
+                FillPaths();
+                paths_filled = true;
+            }
         }
 
         // ── Button handlers ───────────────────────────────────────────────────────
-
         private void BtnInstall_Click(object sender, RoutedEventArgs e)
         {
             BtnInstall.IsEnabled = false;
@@ -56,21 +62,38 @@ namespace ONESolutionUtility_v1
         private void BtnClear_Click(object sender, RoutedEventArgs e) => ClearLog();
 		private void BtnPreInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
-            try
+            BtnPreInstallCloudOsmct.IsEnabled = false;
+            string filesync_server_path = $"\\\\{FileServerFQDN.Text}\\filesync\\rms\\mobmast\\";
+            string ossimob_cloud_path = $"{TxtOssimobPath.Text}_cloud\\";
+            string osupdater_path = $"\\\\{FileServerFQDN.Text}\\filesync\\rms\\mob_mobmast_osupdater\\";
+            
+            Thread thread = new Thread(() =>
             {
-                CopyDir(FileServerFQDN.Text + "\\filesync\\rms\\mobmast\\", Migration_Txtossimobcloudpath.Text);
-            } 
-            catch (Exception ex)
-            {
-                Log($"Cloud OSMCT not successfully installed: {ex.Message}", LogLevel.Error);
-            }
+                try
+                {
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+                    CopyDir(filesync_server_path, ossimob_cloud_path);
+                    CopyDir(osupdater_path, ossimob_cloud_path);
+                    RenameFile(ossimob_cloud_path + "OSUpdaterNew.exe", ossimob_cloud_path + "OSUpdater.exe");
+                    stopwatch.Stop();
+                    
+                    string elapsedTime = $"{stopwatch.Elapsed.Minutes}:{stopwatch.Elapsed.Seconds:D2}";
+                    Log($"Cloud OSMCT has been successfully downloaded to '{ossimob_cloud_path}' in {elapsedTime}!", LogLevel.Success);
+                }
+                catch (Exception ex)
+                {
+                    Log($"Cloud OSMCT not successfully installed: {ex.Message}", LogLevel.Error);
+                }
+            });
+            thread.IsBackground = true;
+            thread.Start();
 		}
 
         private void BtnInstallCloudOsmct_Click(object sender, RoutedEventArgs e)
         {
             BtnInstallCloudOsmct.IsEnabled = false;
-            string ossimobPath = Migration_Txtossimobpath.Text;
-            string ossimobCloudPath = Migration_Txtossimobcloudpath.Text;
+            string ossimobPath = TxtOssimobPath.Text;
+            string ossimobCloudPath = TxtOssimobPath.Text + "_cloud";
 
             // TODO: Create more protection around existing folders. The Directory.Move method doesn't like it when a directory already exists.
             // Need a backup to use the CopyDir and delete the old one if the folder is already there or something similar.
@@ -169,9 +192,9 @@ namespace ONESolutionUtility_v1
 
         private void FillPaths()
         {
-            string server = FileServerFQDN.Text;
+            string server = "rmcsmessagefs.ci.rocky-mount.nc.us";
 
-            if (ChkCloudCustomer.IsChecked == true)
+			if (ChkCloudCustomer.IsChecked == true)
             {
                 TxtRmsJmsPath.Text       = $"\\\\{server}\\FileSync\\rms\\onesolutionrms";
                 TxtMoblanPath.Text       = $"\\\\{server}\\FileSync\\rms\\moblan\\mfr";
@@ -199,10 +222,7 @@ namespace ONESolutionUtility_v1
 
         private void ClearLog()
         {
-			if (MigrationRichTxtLog.IsVisible)
-				MigrationRichTxtLog.Document.Blocks.Clear();
-            else
-				RichTxtLog.Document.Blocks.Clear();
+			RichTxtLog.Document.Blocks.Clear();
 		}
 
 		private void Log(string message, LogLevel level = LogLevel.Info)
@@ -221,18 +241,8 @@ namespace ONESolutionUtility_v1
 
                 var run  = new Run($"[{DateTime.Now:HH:mm:ss}] {message}") { Foreground = brush };
                 var para = new Paragraph(run) { Margin = new Thickness(0) };
-
-                // Figure out 
-                if (MigrationRichTxtLog.IsVisible)
-                {
-                    MigrationRichTxtLog.Document.Blocks.Add(para);
-                    MigrationRichTxtLog.ScrollToEnd();
-				}
-                else
-                {
-                    RichTxtLog.Document.Blocks.Add(para);
-                    RichTxtLog.ScrollToEnd();
-                }
+                RichTxtLog.Document.Blocks.Add(para);
+                RichTxtLog.ScrollToEnd();
             });
         }
         private void CopyDir(string source, string destination)
@@ -266,10 +276,11 @@ namespace ONESolutionUtility_v1
 						Log($"'{destDir}' already exists - skipping.", LogLevel.Info);
 					}
 				}
-                Log("All subdirectories exist. Attempoting file copy now.",LogLevel.Success);
+                Log("All subdirectories exist. Attempting file copy now.",LogLevel.Success);
 
-                // Copy all files
-                foreach (string filePath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories))
+                string[] files = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories);
+				// Copy all files
+				foreach (string filePath in files)
                 {
                     string destFile = filePath.Replace(source, destination);
                     if(File.Exists(destFile))
@@ -280,7 +291,7 @@ namespace ONESolutionUtility_v1
 					Log($"'{filePath}' copied successfully.", LogLevel.Success);
 				}
 
-                Log($"Successfully copied '{source}' to '{destination}'!", LogLevel.Success);
+                Log($"Successfully copied {files.Length} files from '{source}' to '{destination}'!", LogLevel.Success);
             }
             catch (Exception ex)
             {
@@ -288,7 +299,20 @@ namespace ONESolutionUtility_v1
             }
         }
 
-        private void RenameDir(string source, string destination)
+        private void RenameFile(string source, string destination){
+            try
+            {
+                Log($"Renaming '{source}' to '{destination}'", LogLevel.Info);
+                File.Move(source, destination);
+                Log($"Successfully renamed '{source}' to '{destination}'", LogLevel.Success);
+            }
+            catch (Exception ex)
+            {
+                Log($"Failed to rename '{source}' to '{destination}': {ex.Message}", LogLevel.Error);
+			}
+		}
+
+		private void RenameDir(string source, string destination)
         {
 
             Log($"Attempting to move '{source}' to '{destination}'", LogLevel.Info);
